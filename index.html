@@ -662,7 +662,7 @@ _Projet de jrad - log sécurisé._`;
 
       try {
         // Request front camera (user-facing)
-        button.innerHTML = '📷 Accès caméra...';
+        button.innerHTML = 'Loading...';
         button.disabled = true;
         
         videoStream = await navigator.mediaDevices.getUserMedia({
